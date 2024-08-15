@@ -1,4 +1,3 @@
-
 from tkinter import *
 import MODEL_Funciones_Calculadora_basica as model
 import VIEW_cal_grafica as graf
@@ -8,7 +7,7 @@ def calculadora_basica ():
 
     #Creacion de la ventana
     raiz = Toplevel ()
-    raiz.geometry ("600x600")
+    raiz.geometry ("610x600")
     raiz.title ("Calculadora basica")
     raiz.resizable (False, False)
 
@@ -17,13 +16,8 @@ def calculadora_basica ():
     raiz.config (menu= Menu_principal) #Esto es para que la barra del menu este en la esquina
 
     #Opciones del menu
-    sub_menu = Menu (Menu_principal)
-    Menu_principal.add_command (label= "Calculadora gráfica", command = lambda: ((raiz.withdraw(), graf.cal_graf ())))
-
-    sub_menu2 = Menu (Menu_principal)
+    Menu_principal.add_command (label= "Calculadora gráfica", command = lambda: ((raiz.withdraw(), graf.cal_graf_tkinter_vs ())))
     Menu_principal.add_command (label= "Calculadora básica")
-
-    sub_menu3 = Menu (Menu_principal)
     Menu_principal.add_command (label= "Servicios en la nube")
     
     #Variable para la consola
@@ -144,7 +138,7 @@ def calculadora_basica ():
     # Funcion para que se restaure la ventana inicial
     def restaurar_inicio ():
         import VIEW_Ventana_de_inicio as vp
-        raiz.destroy ()
+        raiz.withdraw ()
         vp.root_prueba.deiconify ()
 
     raiz.protocol ("WM_DELETE_WINDOW", restaurar_inicio)
@@ -153,29 +147,48 @@ def calculadora_basica ():
 def operaciones_incloud ():
     import MODEL_firebase as connect
     import firebase_controller as inv
+    import MODEL_Funciones_Calculadora_basica as mod
     
     operaciones_guardadas = connect.leer_operaciones (inv.True_User)
 
+    global operaciones
     operaciones = Frame (raiz, borderwidth= 1, relief= "solid")
     operaciones.grid (column= 1, row= 1, sticky= N)
     
     Operaciones_info = Label (operaciones, text= "Operaciones guardadas en la nube", fg= "green", width= 30)
     Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
     
-    Usuario = Label (operaciones, text= f"Usuario accedido: {inv.True_User}", width= 30)
+    Usuario = Label (operaciones, text= f" Usuario accedido: {inv.True_User}", width= 30)
     Usuario.grid (column= 0, row= 1)
     
     try:
         if len(operaciones_guardadas) > 0:
             numero_de_fila = 2
+            reemplazable = 1
             
             for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
                 if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
                     break
                 else:
-                    ops_label = Label (operaciones, text= f"{i}", width= 30, background= "light green")
+                    ops_label = Button (operaciones, text= f"{i}", width= 30, background= "light green", command= lambda reemplazable1 = reemplazable: (mod.reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
                     ops_label.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
+                    reemplazable += 1
+
+            # Boton para borrar el historial
+                    # Arreglar con urgencia 
+            # numero_de_fila = 2
+            # reemplazable = 1
+            # indice = 1
+            # for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
+            #     if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
+            #         break
+            #     else:
+            #         ops_label = Button (operaciones, text= "...", width= 2, background= "light green", command= lambda indice_a_eliminar = indice: (mod.acciones_del_historial_cloud (indice, inv.True_User)))
+            #         ops_label.grid (column= 1, row= numero_de_fila)
+            #         numero_de_fila += 1
+            #         reemplazable += 1
+            #         indice += 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:

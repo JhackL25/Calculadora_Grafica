@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import db
 
 # Recibe la credencial del usuario
-cred = credentials.Certificate("C:/Users/joelg/OneDrive/Escritorio/SAVE2/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
+cred = credentials.Certificate("C:/Users/joelg/OneDrive/Escritorio/CALCULADORA_GRAFICA_pruebas/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
 
 # Inicializa la base de datos con los permisos dado por la credencial
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://geogebra-969a5-default-rtdb.firebaseio.com/'})
@@ -16,10 +16,10 @@ users_ref = ref.child('Users')
 
 # Funcion para crear un usuario en la base de datos
 def create(nombre, edad, sexo, rol, contraseña):
-    """nombre: recibe el nombre para asignar una clave, donde los datos seran valores dentro de este\n
+    """nombre: recibe el nombre para asignar una clave, donde los datos seran valores dentro de este/n
        edad: almacena la informacion de edad
-       sexo: almacena la inforamcion del sexo\n
-       rol: almacena la informacion del rol (Estudiante, Profesor)\n
+       sexo: almacena la inforamcion del sexo/n
+       rol: almacena la informacion del rol (Estudiante, Profesor)/n
        contraseña: almacena la contraseña del usuario"""
 
     #users_ref.child(nombre).set: crea un nodo secundario en la base de datos como una clave,
@@ -77,7 +77,7 @@ def update(ref, key, val):
     else:
         print('Usuario no encontrado')
 
-
+# Eliminar usuarios de la base de datos
 def delete(value):
     """value: Recibe el valor de una clave para buscarlo en la base de datos"""
    # Recibe el nombre en value y lo busca como clave en la base de datos
@@ -85,6 +85,7 @@ def delete(value):
     if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
         # Borra la clave dada en ref (vendria a ser el usuario)
         ref.delete()
+
 
 #Funciones guardado en la nube cal_basica
 # Se guarda en la variable 'ref' una refencia en la base de datos
@@ -122,7 +123,7 @@ def leer_operaciones (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene operaciones guardadas
 
-def delete(usuario, clave):
+def delete_operaciones (usuario, clave):
     """value: Recibe el valor de una clave para buscarlo en la base de datos"""
    # Recibe el nombre en value y lo busca como clave en la base de datos
     ref = db.reference(f'server/saving-data/Users/{usuario}/operaciones/{clave}')
@@ -130,7 +131,51 @@ def delete(usuario, clave):
         # Borra la clave dada en ref (vendria a ser el usuario)
         ref.delete()    
     else:
-        print(ref.get())
         print('No tienes operaciones guardadas con esa clave')
 
-# Ejemplo: delete('X', 0)
+# delete_operaciones ("sexo", 0)
+
+#Funciones guardado en la nube cal_grafica
+# Se hace uso de la variable 'ref' (la de arriba) que tiene una refencia en la base de datos a los usuarios
+
+def guardar_funcion_grafica (usuario, funcion):
+    # Recibe el nombre del usuario y lo busca como clave en la base de datos
+    ref = db.reference(f'server/saving-data/Users/{usuario}')
+
+    if ref.get() is not None:  # Condición para saber si el nombre dado está en la base de datos
+        ref = db.reference(f'server/saving-data/Users/{usuario}/funciones')
+        
+        # Obtenemos las operaciones existentes
+        funciones_existentes = ref.get()
+        
+        if funciones_existentes:
+            funciones_existentes.append (funcion)
+        else:
+            funciones_existentes = [funcion]
+        
+        ref.set(funciones_existentes)
+    else:
+        print('Usuario no encontrado') 
+        return False
+
+def leer_funcion_grafica (usuario):
+    ref = db.reference(f'server/saving-data/Users/{usuario}/funciones')
+    
+    if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
+        funciones_guardadas = (ref.get()) # Obtiene los valores dentro de la clave dada en Usuario
+        funciones_guardadas.reverse () # Aqui se invierten los elementos de la lista para que los primeros indices
+    #                           # Sean las operaciones recientes que ha guardado el usuario
+        return funciones_guardadas
+    
+    else:
+        return [] # Ocurre cuando el usuario no tiene funciones guardadas
+
+def delete_funciones (usuario, clave):
+    """value: Recibe el valor de una clave para buscarlo en la base de datos"""
+   # Recibe el nombre en value y lo busca como clave en la base de datos
+    ref = db.reference(f'server/saving-data/Users/{usuario}/funciones/{clave}')
+    if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
+        # Borra la clave dada en ref (vendria a ser el usuario)
+        ref.delete()    
+    else:
+        print('No tienes funciones guardadas con esa clave')

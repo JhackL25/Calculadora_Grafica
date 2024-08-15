@@ -1,181 +1,300 @@
+# Funcion experimental para recrear la ventana en tkinter 
 
-def cal_graf():
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from matplotlib.widgets import TextBox, Button
+def cal_graf_tkinter_vs ():
+    # Importacion de GUI tkinter
+    from tkinter import ttk as ttk
+    import tkinter as tk
     import MODEL_grafica as mod
 
+    # Importaciones de matplot
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-    Historial = ['','','','']
+    # Globalizacion de variables para que las utilizen las funciones
+    global Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str, Entrada_funciones, raiz, Variable_de_control
+    
+    # Creación de la ventana de la calculadora grafica
+    raiz = tk.Toplevel ()
+    raiz.title ("Calculadora gráfica")
 
-    def update(val):
-        func = function_box.text    
-        update_historial(func)
-        func = mod.correc_ecuacion(func)
+    #Opciones del menu
+    Menu_principal = tk.Menu (raiz)
+    raiz.config (menu= Menu_principal) #Esto es para que la barra del menu este en la esquina
+
+    Menu_principal.add_command (label= "Calculadora gráfica")
+    Menu_principal.add_command (label= "Calculadora básica")
+    Menu_principal.add_command (label= "Servicios en la nube")
+
+    # Ubicacion de la entrada de datos
+    Label_entrada = tk.Label (raiz, text= "Ingrese su función f(x) = ", font= ("Helvetica", 12))
+    Label_entrada.grid (column= 0, row= 0, sticky= "we", pady= 10, padx= 10)
+
+    Entrada_funciones = tk.Entry (raiz, font= ("Helvetica", 11), borderwidth= 1, relief= "solid") #, background= "#eeeeee")
+    Entrada_funciones.grid (column= 1, row= 0, ipady= 7, sticky= "we", pady= 10)
+    
+# Funciones que utiliza la calculadora grafica
+    
+    # Funcion para graficar la funcion de la entrada
+    def graficar_funcion (evento_enter):
+        
+        funcion = Entrada_funciones.get ()    
+        funcion = mod.correc_ecuacion (funcion)
+
         try:
-            
-            x_vals = np.linspace(-500, 500, 10000)
-            y_vals = [eval(func) for x in x_vals]
-            line.set_ydata(y_vals)
+            x_vals = np.linspace (-500, 500, 10000)
+            y_vals = [eval(funcion) for x in x_vals]
+            line.set_ydata (y_vals)
             ax.relim()
             ax.autoscale_view()
             fig.canvas.draw_idle()
-            
+        
+            # Aqui se guarda la funcion en el historial
+            mod.historial (funcion)
         except Exception as e:
             print(f"Error: {e}")
 
-        update_historial(func)
+    # Vinculación de la tecla "Enter" a la funcion de graficar
+    Entrada_funciones.bind ("<Return>", graficar_funcion)
 
+    # Funcion para cada boton del ciclo for
+    def funciones_graficas (numero_de_funcion):
+        """La función "funciones_graficas" tiene el objetivo de asignar una función a cada boton 
+        de funciones."""
         
+        # Obtener las "funciones" de la entrada de datos
+        funcion = Entrada_funciones.get ()
+        
+        try:
+            if numero_de_funcion == "Exponenciación":
+                Contenido_nuevo = (funcion + "**")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "Seno":
+                Contenido_nuevo = (funcion + "sin()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "Coseno":
+                Contenido_nuevo = (funcion + "cos()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+        
+            if numero_de_funcion == "Tangente":
+                Contenido_nuevo = (funcion + "tan()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "Pi":
+                Contenido_nuevo = (funcion + "π")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "Cosecante":
+                Contenido_nuevo = (funcion + "csc()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "Secante":
+                Contenido_nuevo = (funcion + "sec()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
 
+            if numero_de_funcion == "Cotangente":
+                Contenido_nuevo = (funcion + "ctn()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+        
+        except:
+            pass
 
-    def update_historial(func):
-        for i in range(len(Historial)):
-            Historial[i] = Historial[i - 1]
-        Historial[0] = func
+# Creacion de widgets
+    # Boton para graficar la funcion
+    Graficar_button = tk.Button (raiz, text= "Graficar función", font= ("Helvetica", 11), borderwidth= 1, relief= "solid", background= "#cccccc", command= lambda: (graficar_funcion ("XD")))
+    Graficar_button.grid (column= 3, row= 0, padx= 5)
 
+    # Botones de funciones trigonometricas
+    teclado_frame = tk.Frame (raiz)
+    teclado_frame.grid (column= 1, row= 1)
+
+    trigonometria = ("Potencia: ^", "Sin", "Cos", "Tan", "π", "CSC", "SEC", "CTAN")
+    Funciones = ("Exponenciación", "Seno", "Coseno", "Tangente", "Pi", "Cosecante", "Secante", "Cotangente")
+    
+    # Número de fila, columna y funcion para los botones del ciclo for
+    fila = 0
+    Columna = 0
+    funcion = 0
+
+    # Estilo de los botones (solo para ttk) / no admite ni relief ni boderwidth 
+    # Estilo_botones_funciones = ttk.Style ()
+    # Estilo_botones_funciones.configure ("Funciones.TButton", font= ("Helvetica", 11))
+
+    for cada_funcion in trigonometria:        
+        Botones_trigonometria = tk.Button (teclado_frame, text= cada_funcion, command= lambda indice = funcion: funciones_graficas (Funciones [indice]), width= 10, pady= 5, font= ("Helvetica", 11), borderwidth= 1, relief= "solid", background= "#cccccc")
+        Botones_trigonometria.grid (column= Columna, row= fila, padx= 2, pady= 3)
+        Columna += 1
+        funcion += 1
+        
+        if cada_funcion == "Tan":
+            Columna = 0
+            fila = 1
+    
     # Crear la figura y los ejes
+    fig, ax = plt.subplots (figsize= (6, 5))
+    ax.set_xlim (-10, 10)    
+    ax.set_ylim (-10, 10)
+#   plt.subplots_adjust (0.05,0.05,0.6,0.71) # Este codigo ya no se utiliza 
+#                                            # por que no deja centrar el grafico en el frame
+    ax.grid (which = "major", linewidth = 1)
+    ax.grid (which = "minor", linewidth = 0.2)
+    ax.minorticks_on ()
 
-    fig, ax = plt.subplots(figsize=(10, 7))
-    ax.set_xlim(-10, 10)    
-    ax.set_ylim(-10, 10)
-    plt.subplots_adjust(0.05,0.05,0.6,0.71)
-    ax.grid(which = "major", linewidth = 1)
-    ax.grid(which = "minor", linewidth = 0.2)
-    ax.minorticks_on()
+    # Creacion del "Frame" del gráfico de matplot
+    Frame_grafico = FigureCanvasTkAgg (fig, master= raiz)
+    Frame_grafico.get_tk_widget().grid (column= 0, row= 2, columnspan= 4, sticky= "nsew", padx= 10, pady= 10)
+
+    # Añadir la barra de herramientas de matplot a la ventana de tkinter
+    Barra_de_herramientas = NavigationToolbar2Tk (Frame_grafico, raiz, pack_toolbar= False)
+    Barra_de_herramientas.update ()
+    Barra_de_herramientas.place (x= 362, y= 170, anchor= "center", width= 680, height= 30)
+    
+    # Esta linea de codigo se descarta ya que ubica mal el widget al aumentar la resolucion
+    # de la pantalla
+    
+    ## Barra_de_herramientas.place (relx= 0.5, rely= 0.2885, anchor= "center", width= 400, height= 30) 
 
     # Grafico inicial
-    x = np.linspace(-500, 500, 10000)
+    x = np.linspace (-500, 500, 10000)
     y = 2 * x**2 + 3 * x + 1
-    line, = ax.plot(x, y)
+    line, = ax.plot (x, y)
 
-    # TextBox para ingresar la función
-    function_box = TextBox(plt.axes([0.15, 0.91, 0.395, 0.05]), 'Ingrese función: Y= ')
-    function_box.on_submit(update)
-
-    #Botones
-
-    ##Potencia
-    def exponente(event):
-        function_box.set_val(function_box.text + "**")
-
-    button_ax = plt.axes([0.15, 0.85, 0.095, 0.05])
-    button = Button(button_ax, 'Potencia: ^')
-    button.on_clicked(exponente)
-
-    #TRIGONOMETRIAS
-    ##Seno    
-    def seno(event):
-        function_box.set_val(function_box.text + 'sin()')
-
-    button_ax2 = plt.axes([0.25, 0.85, 0.095, 0.05])
-    button2 = Button(button_ax2, 'Sin')
-    button2.on_clicked(seno)
-    ##Coseno
-    def coseno(event):
-        function_box.set_val(function_box.text + 'cos()')
-
-    button_ax3 = plt.axes([0.35, 0.85, 0.095, 0.05])
-    button3 = Button(button_ax3, 'Cos')
-    button3.on_clicked(coseno)
-    ##Tangente
-    def tangente(event):
-        function_box.set_val(function_box.text + 'tan()')
-
-    button_ax4 = plt.axes([0.45, 0.85, 0.095, 0.05])
-    button4 = Button(button_ax4, 'Tan')
-    button4.on_clicked(tangente)
-    ##Cosecante
-    def cosecante(event):
-        function_box.set_val(function_box.text + 'csc()')
-    button_ax5 = plt.axes([0.25, 0.79, 0.095, 0.05])
-    button5 = Button(button_ax5, 'CSC')
-    button5.on_clicked(cosecante)
-    ##Secante
-    def secante(event):
-        function_box.set_val(function_box.text + 'sec()')
-
-    button_ax6 = plt.axes([0.35, 0.79, 0.095, 0.05])
-    button6 = Button(button_ax6, 'SEC')
-    button6.on_clicked(secante)
-    ##Cotrangente
-    def cotangente(event):
-        function_box.set_val(function_box.text + 'ctn()')
-
-    button_ax7 = plt.axes([0.45, 0.79, 0.095, 0.05])
-    button7 = Button(button_ax7, 'CTAN')
-    button7.on_clicked(cotangente)
-    ## Pi
-    def pi(event):
-        function_box.set_val(function_box.text +'π')
-
-    button_ax9 = plt.axes([0.15, 0.79, 0.095, 0.05])
-    button9 = Button(button_ax9, 'π')
-    button9.on_clicked(pi)    
-        
-
-    #Historial
-    Historial = ['','','','']
-    ##Botones historial
-    ##Boton 1
-    def historial_click1(event):
-        funcion_hist_correc = Historial[0]
-        Historial_1 = mod.correc_historial(funcion_hist_correc)
-        function_box.set_val("")  # Borra el contenido de la caja de texto
-        function_box.set_val(Historial_1)  # Agrega el elemento del historial
-        print(Historial_1)
-
-    button_H1 = plt.axes([0.61, 0.66, 0.3, 0.03])
-    button_H1 = Button(button_H1, Historial[0])
-    button_H1.on_clicked(historial_click1)
+    # Creacion del historial
+    # Frame del historial
+    Memory_frame = tk.Frame (raiz, borderwidth= 1, relief= "solid")
+    Memory_frame.grid (column= 4, row= 0, rowspan= 4, padx= 10, pady= 10, sticky= "n")
     
-    #Boton 2
-    def historial_click2(event):
-        funcion_hist_correc = Historial[1]
-        Historial_2 = mod.correc_historial(funcion_hist_correc)
-        function_box.set_val("")  # Borra el contenido de la caja de texto
-        function_box.set_val(Historial_2)  # Agrega el elemento del historial
-        print(Historial_2)
+    # Memory_frame.place (relx= 0.785, rely= 0.02, anchor= "n")
 
-    button_H2 = plt.axes([0.61, 0.60, 0.3, 0.03])
-    button_H2 = Button(button_H2, Historial[1])
-    button_H2.on_clicked(historial_click2)
+    #Label/titulo para el historial
+    Titulo = tk.Label (Memory_frame, text= "Historial", font= ("Consolas", 16))
+    Titulo.grid (column= 0, row= 0)
 
-    #Boton 3
-    def historial_click3(event):
-        funcion_hist_correc = Historial[2]
-        Historial_3 = mod.correc_historial(funcion_hist_correc)
-        function_box.set_val("")  # Borra el contenido de la caja de texto
-        function_box.set_val(Historial_3)  # Agrega el elemento del historial
-        print(Historial_3)
+    # Widgets de la vista, en este caso corresponden al teclado
+    # Espacios para las opciones de los slots del historial
 
-    button_H3 = plt.axes([0.61, 0.54, 0.3, 0.03])
-    button_H3 = Button(button_H3, Historial[2])
-    button_H3.on_clicked(historial_click3)
+    # Variable para el modo invitado
+    from VIEW_Calculadora_basica import Variable_de_control
+    
+    # Para el Slot 1 
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (1, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=1)
 
-    #Boton 4
-    def historial_click4(event):
-        funcion_hist_correc = Historial[3]
-        Historial_4 = mod.correc_historial(funcion_hist_correc)
-        function_box.set_val("")  # Borra el contenido de la caja de texto
-        function_box.set_val(Historial_4)  # Agrega el elemento del historial
-        print(Historial_4)
+    # Para el Slot 2
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (2, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=2)
 
-    button_H4 = plt.axes([0.61, 0.48, 0.3, 0.03])
-    button_H4 = Button(button_H4, Historial[3])
-    button_H4.on_clicked(historial_click4)
+    # Para el Slot 3 
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (3, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=3)
 
-    # variable para cerrar la grafica    
-    variable_de_control = False
+    # Para el Slot 4 
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (4, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=4)
+    
+    # Para el Slot 5 
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (5, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=5)
+    
+    # Para el Slot 6 
+    Boton_de_opciones = tk.Button (Memory_frame, text= "...", width= "5", height= "2", command= lambda: mod.acciones_del_historial (6, invitado= Variable_de_control))
+    Boton_de_opciones.grid (column= 1, row=6)
 
-    def restaurar_basica(event):
+    # Stringvars para los slots del historial
+    valor_por_defecto = "-Vacio-"
+    Slot1_str = tk.StringVar () ; Slot1_str.set (valor_por_defecto)
+    Slot2_str = tk.StringVar () ; Slot2_str.set (valor_por_defecto)
+    Slot3_str = tk.StringVar () ; Slot3_str.set (valor_por_defecto)
+    Slot4_str = tk.StringVar () ; Slot4_str.set (valor_por_defecto)
+    Slot5_str = tk.StringVar () ; Slot5_str.set (valor_por_defecto)
+    Slot6_str = tk.StringVar () ; Slot6_str.set (valor_por_defecto)
+
+    # Espacios para el historial
+    Slot1 = tk.Button (Memory_frame, textvariable= Slot1_str, width= "25", height= "2", command= lambda: mod.reemplazar (1))
+    Slot1.grid (column= 0, row= 1)   
+
+    Slot2 = tk.Button (Memory_frame, textvariable= Slot2_str, width= "25", height= "2", command= lambda: mod.reemplazar (2))
+    Slot2.grid (column= 0, row= 2)   
+
+    Slot3 = tk.Button (Memory_frame, textvariable= Slot3_str, width= "25", height= "2", command= lambda: mod.reemplazar (3))
+    Slot3.grid (column= 0, row= 3)   
+
+    Slot4 = tk.Button (Memory_frame, textvariable= Slot4_str, width= "25", height= "2", command= lambda: mod.reemplazar (4))
+    Slot4.grid (column= 0, row= 4)   
+
+    Slot5 = tk.Button (Memory_frame, textvariable= Slot5_str, width= "25", height= "2", command= lambda: mod.reemplazar (5))
+    Slot5.grid (column= 0, row= 5)
+   
+    Slot6 = tk.Button (Memory_frame, textvariable= Slot6_str, width= "25", height= "2", command= lambda: mod.reemplazar (6))
+    Slot6.grid (column= 0, row= 6)
+
+    # Borrar el contenido de todos los "Slots" del historial
+    erase_historial = tk.Button (Memory_frame, text= "🗑", font= (None, 11), command= mod.clear_all, padx= "7.55")
+    erase_historial.grid (column= 1, row= 0)
+    
+    # Función para que cuando se cierre vuelva a la ventana de inicio
+    def restaurar_inicio ():
         import VIEW_Calculadora_basica as basic
-        plt.close ()
+        raiz.destroy ()
+        plt.close () # Para que se cierre el grafico, que se encuentra en el frame
         basic.raiz.deiconify ()
 
-    
-    button_Cal = plt.axes([0.81, 0.90, 0.17, 0.06])
-    button_Cal = Button(button_Cal, 'Calculadora Basica O_o')
-    button_Cal.on_clicked(restaurar_basica)
+    raiz.protocol ("WM_DELETE_WINDOW", restaurar_inicio)
 
-    plt.show ()
+    if Variable_de_control == False:
+        funciones_incloud ()
+    else:
+        advertencia = tk.Label (raiz, text= "Algunas funciones se encuentran limitadas \n[Modo invitado]", font= ("Arial", 9), fg= "#9b9b9b")
+        advertencia.place (relx= 0.87, rely= 0.8, anchor= "s")
+
+# Ver funciones guardadas
+def funciones_incloud ():
+    import tkinter as tk
+    import MODEL_firebase as connect
+    import firebase_controller as inv
+    
+    operaciones_guardadas = connect.leer_funcion_grafica (inv.True_User)
+
+    global operaciones
+    
+    operaciones = tk.Frame (raiz, borderwidth= 1, relief= "solid")
+    operaciones.grid (column= 5, row= 1, rowspan= 4, sticky= "n")
+    
+    Operaciones_info = tk.Label (operaciones, text= "Funciones guardadas en la nube", fg= "green", width= 30)
+    Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
+    
+    Usuario = tk.Label (operaciones, text= f" Usuario accedido: {inv.True_User}", width= 30)
+    Usuario.grid (column= 0, row= 1)
+    
+    try:
+        if len(operaciones_guardadas) > 0:
+            numero_de_fila = 2
+            reemplazable = 1
+
+            for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
+                if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
+                    break
+                else:
+                    from MODEL_grafica import reemplazar_en_la_nube
+
+                    ops_label = tk.Button (operaciones, text= f"{i}", width= 30, background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
+                    ops_label.grid (column= 0, row= numero_de_fila)
+                    numero_de_fila += 1
+                    reemplazable += 1
+        else:
+            raise IndexError # Pasa al bloque except   
+    except IndexError:
+        # Cuando el usuario no tenga operaciones en la base de datos 
+        # se le va a informar a través de un label
+        no_operaciones = tk.Label (operaciones, text= "No tiene funciones guardadas en la nube")
+        no_operaciones.grid (column= 0, row= 3)
