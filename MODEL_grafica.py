@@ -10,7 +10,7 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'sec\(', '(<5-5>>', ecuacion)
     ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
 
-    # ecuacion = re.sub(r'[a-zA-Z]', r'x', ecuacion)   
+    ecuacion = re.sub(r'[a-zA-Z]', r'x', ecuacion)   
     
     #cambios necesarios para operar eval()
     ecuacion = re.sub(r'([a-zA-Z])(\()', r'\1*\2', ecuacion)    # Variable y paréntesis abierto
