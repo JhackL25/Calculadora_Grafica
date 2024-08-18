@@ -170,12 +170,22 @@ def leer_funcion_grafica (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene funciones guardadas
 
-def delete_funciones (usuario, clave):
-    """value: Recibe el valor de una clave para buscarlo en la base de datos"""
-   # Recibe el nombre en value y lo busca como clave en la base de datos
-    ref = db.reference(f'server/saving-data/Users/{usuario}/funciones/{clave}')
-    if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
-        # Borra la clave dada en ref (vendria a ser el usuario)
-        ref.delete()    
+def delete_funciones (usuario, numero_funcion):
+    # Recibe el nombre del usuario y lo busca como clave en la base de datos
+    ref = db.reference(f'server/saving-data/Users/{usuario}')
+
+    if ref.get() is not None:  # Condición para saber si el nombre dado está en la base de datos
+        ref = db.reference(f'server/saving-data/Users/{usuario}/funciones')
+        
+        # Obtenemos las operaciones existentes
+        funciones_existentes = ref.get()
+        
+        funciones_existentes
+        funciones_existentes.pop(numero_funcion)
+        
+        ref.set(funciones_existentes)
+    
     else:
-        print('No tienes funciones guardadas con esa clave')
+        print('Usuario no encontrado') 
+        return False
+        

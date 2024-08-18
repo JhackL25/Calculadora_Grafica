@@ -10,6 +10,7 @@ def cal_graf_tkinter_vs ():
     import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+    from mpl_toolkits.mplot3d import axes3d
 
     # Globalizacion de variables para que las utilizen las funciones
     global Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str, Entrada_funciones, raiz, Variable_de_control
@@ -111,8 +112,12 @@ def cal_graf_tkinter_vs ():
 
 # Creacion de widgets
     # Boton para graficar la funcion
-    Graficar_button = tk.Button (raiz, text= "Graficar función", font= ("Helvetica", 11), borderwidth= 1, relief= "solid", background= "#cccccc", command= lambda: (graficar_funcion ("XD")))
+    Graficar_button = tk.Button (raiz, text= "Graficar función", font= ("Helvetica", 11), borderwidth= 1, relief= "solid", background= "#cccccc", command= lambda: (graficar_funcion ('porque xD?')))
     Graficar_button.grid (column= 3, row= 0, padx= 5)
+
+    #Boton para grafica 3D
+    Grafica3D_button = tk.Button (raiz, text= "Grafica en 3D", font= ("Helvetica", 11), borderwidth= 1, relief= "solid", background= "#cccccc", command= lambda: (grafica3D("XD")))
+    Grafica3D_button.grid(column= 4, row= 2, padx= 5)
 
     # Botones de funciones trigonometricas
     teclado_frame = tk.Frame (raiz)
@@ -256,6 +261,43 @@ def cal_graf_tkinter_vs ():
     else:
         advertencia = tk.Label (raiz, text= "Algunas funciones se encuentran limitadas \n[Modo invitado]", font= ("Arial", 9), fg= "#9b9b9b")
         advertencia.place (relx= 0.87, rely= 0.8, anchor= "s")
+    
+    def grafica3D(funcion):
+    # Obtener la función de la entrada
+        funcion = Entrada_funciones.get()
+        funcion = mod.correc_ecuacion(funcion)
+        
+        try:
+            # Crear un nuevo eje en 3D
+            fig3d = plt.figure(figsize=(6, 5))
+            ax3d = fig3d.add_subplot(111, projection='3d')
+            
+            # Crear datos para la gráfica 3D
+            x_vals = np.linspace(-5, 5, 100)
+            y_vals = np.linspace(-5, 5, 100)
+            x, y = np.meshgrid(x_vals, y_vals)
+            
+            # Evaluar la función Z = f(X, Y)
+            z = eval(funcion)
+
+            # Graficar la superficie
+            ax3d.plot_surface(x, y, z, cmap='viridis')
+
+            # Añadir etiquetas
+            ax3d.set_xlabel('X axis')
+            ax3d.set_ylabel('Y axis')
+            ax3d.set_zlabel('Z axis')
+            
+            # Mostrar la gráfica
+            fig3d.show()
+            
+            # Guardar la función en el historial
+            mod.historial(funcion)
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
 
 # Ver funciones guardadas
 def funciones_incloud ():
@@ -298,3 +340,6 @@ def funciones_incloud ():
         # se le va a informar a través de un label
         no_operaciones = tk.Label (operaciones, text= "No tiene funciones guardadas en la nube")
         no_operaciones.grid (column= 0, row= 3)
+
+
+    
