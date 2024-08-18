@@ -291,8 +291,6 @@ def cal_graf_tkinter_vs ():
             # Mostrar la gráfica
             fig3d.show()
             
-            # Guardar la función en el historial
-            mod.historial(funcion)
         except Exception as e:
             print(f"Error: {e}")
 
