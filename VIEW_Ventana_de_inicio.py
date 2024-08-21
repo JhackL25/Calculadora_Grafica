@@ -12,15 +12,15 @@ def ventana_principal ():
     global root_prueba
 
     root_prueba = tk.Tk()
-    root_prueba.title ("Graphene")
-    root_prueba.geometry ("800x400")
+    root_prueba.title ("Ventana de inicio")
+    root_prueba.geometry ("810x340")
     root_prueba.resizable (False, False)
 
     #Label de bienvenida (con frame)
     F_bien = ttk.Frame (root_prueba)
     F_bien.pack()
 
-    Bienvenida_C = ttk.Label(F_bien, text="Bienvenido a la \n Calculadora Grafica", font= ("Century", 40)).pack()
+    Bienvenida_C = ttk.Label(F_bien, text="Bienvenido a la ventana de inicio", font= ("Century", 38)).pack()
 
     #Frame del menu
     frame_menu = ttk.Frame (root_prueba)
@@ -38,12 +38,12 @@ def ventana_principal ():
         import VIEW_Calculadora_basica as view
         view.Variable_de_control = True
         
+        view.Menu_principal.add_command (label= "Servicios en la nube", state= "disabled")
         advertencia = Label (view.raiz, text= "Algunas funciones se encuentran limitadas \n[Modo invitado]", font= ("Arial", 9), fg= "#9b9b9b")
-        advertencia.place (relx= 0.784, rely= 1, anchor= "s")
-
+        advertencia.place (relx= 0.784, rely= 0.8, anchor= "s")
 
     #Ingresar como invitado
-    Acceder_como_invitado = ttk.Button (frame_menu, text="Acceder como invitado", width= 25, command= lambda: (root_prueba.withdraw (), model.Historial.clear (), run.run (), iniciar_modo_invitado (), model.limpiar ()))
+    Acceder_como_invitado = ttk.Button (frame_menu, text= "Acceder como invitado", width= 25, command= lambda: (root_prueba.withdraw (), model.Historial.clear (), run.run (), iniciar_modo_invitado (), model.limpiar ()))
     Acceder_como_invitado.grid (row= 2, column= 0, columnspan= 2, sticky="NS", pady= 100)
 
     root_prueba.mainloop ()

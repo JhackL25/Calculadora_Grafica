@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import db
 
 # Recibe la credencial del usuario
-cred = credentials.Certificate("C:/Users/joelg/OneDrive/Escritorio/CALCULADORA_GRAFICA_pruebas/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
+cred = credentials.Certificate("C:/Users/joelg/OneDrive/Documents/GitHub/SAVE/Calculadora_Grafica/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
 
 # Inicializa la base de datos con los permisos dado por la credencial
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://geogebra-969a5-default-rtdb.firebaseio.com/'})
@@ -16,10 +16,10 @@ users_ref = ref.child('Users')
 
 # Funcion para crear un usuario en la base de datos
 def create(nombre, edad, sexo, rol, contraseña):
-    """nombre: recibe el nombre para asignar una clave, donde los datos seran valores dentro de este/n
+    """nombre: recibe el nombre para asignar una clave, donde los datos seran valores dentro de este\n
        edad: almacena la informacion de edad
-       sexo: almacena la inforamcion del sexo/n
-       rol: almacena la informacion del rol (Estudiante, Profesor)/n
+       sexo: almacena la inforamcion del sexo\n
+       rol: almacena la informacion del rol (Estudiante, Profesor)\n
        contraseña: almacena la contraseña del usuario"""
 
     #users_ref.child(nombre).set: crea un nodo secundario en la base de datos como una clave,
@@ -77,7 +77,7 @@ def update(ref, key, val):
     else:
         print('Usuario no encontrado')
 
-# Eliminar usuarios de la base de datos
+# Funcion para eliminar usuarios de la base de datos
 def delete(value):
     """value: Recibe el valor de una clave para buscarlo en la base de datos"""
    # Recibe el nombre en value y lo busca como clave en la base de datos
@@ -85,12 +85,13 @@ def delete(value):
     if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
         # Borra la clave dada en ref (vendria a ser el usuario)
         ref.delete()
-
+        
 
 #Funciones guardado en la nube cal_basica
 # Se guarda en la variable 'ref' una refencia en la base de datos
 ref = db.reference('server/saving-data/Users')
    
+# Guardar operaciones de la calculadora basica a la base de datos
 def guardar_operacion(usuario, operacion):
     # Recibe el nombre del usuario y lo busca como clave en la base de datos
     ref = db.reference(f'server/saving-data/Users/{usuario}')
@@ -111,6 +112,7 @@ def guardar_operacion(usuario, operacion):
         print('Usuario no encontrado') 
         return False
 
+# Leer operaciones guardadas por el usuario
 def leer_operaciones (usuario):
     ref = db.reference(f'server/saving-data/Users/{usuario}/operaciones')
     
@@ -123,6 +125,7 @@ def leer_operaciones (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene operaciones guardadas
 
+# Funcion para eliminar operaciones de la calculadora basica de la base de datos
 def delete_operaciones (usuario, clave):
     """value: Recibe el valor de una clave para buscarlo en la base de datos"""
    # Recibe el nombre en value y lo busca como clave en la base de datos
@@ -133,11 +136,11 @@ def delete_operaciones (usuario, clave):
     else:
         print('No tienes operaciones guardadas con esa clave')
 
-# delete_operaciones ("sexo", 0)
 
-#Funciones guardado en la nube cal_grafica
+# Funciones guardado en la nube cal_grafica
 # Se hace uso de la variable 'ref' (la de arriba) que tiene una refencia en la base de datos a los usuarios
 
+# Guardar funciones de la calculadora basica a la base de datos
 def guardar_funcion_grafica (usuario, funcion):
     # Recibe el nombre del usuario y lo busca como clave en la base de datos
     ref = db.reference(f'server/saving-data/Users/{usuario}')
@@ -158,6 +161,7 @@ def guardar_funcion_grafica (usuario, funcion):
         print('Usuario no encontrado') 
         return False
 
+# Leer funciones guardadas por el usuario
 def leer_funcion_grafica (usuario):
     ref = db.reference(f'server/saving-data/Users/{usuario}/funciones')
     
@@ -170,6 +174,7 @@ def leer_funcion_grafica (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene funciones guardadas
 
+# Funcion para eliminar funciones de la calculadora basica de la base de datos
 def delete_funciones (usuario, numero_funcion):
     # Recibe el nombre del usuario y lo busca como clave en la base de datos
     ref = db.reference(f'server/saving-data/Users/{usuario}')
@@ -181,11 +186,10 @@ def delete_funciones (usuario, numero_funcion):
         funciones_existentes = ref.get()
         
         funciones_existentes
-        funciones_existentes.pop(numero_funcion)
+        funciones_existentes.pop (numero_funcion)
         
         ref.set(funciones_existentes)
     
     else:
         print('Usuario no encontrado') 
         return False
-        

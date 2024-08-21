@@ -1,18 +1,22 @@
 import re
+import numpy as np
 import tkinter as tk
 
+# Funcion para corregir la expresion
 def correc_ecuacion (ecuacion):
-    #Reemplazos para que las funciones trigonometricas sean accesibles al eval()
+    # Reemplazos para que las funciones trigonometricas sean accesibles al eval()
     ecuacion = re.sub(r'sin\(', '(<1>>', ecuacion)
     ecuacion = re.sub(r'cos\(', '(<2>>', ecuacion)
     ecuacion = re.sub(r'tan\(', '(<3>>', ecuacion)
     ecuacion = re.sub(r'csc\(', '(<4-4>>', ecuacion)
     ecuacion = re.sub(r'sec\(', '(<5-5>>', ecuacion)
     ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
+    ecuacion = re.sub(r'e','<7>',ecuacion)
 
-    ecuacion = re.sub(r'[a-zA-Z]', r'x', ecuacion)   
-    
-    #cambios necesarios para operar eval()
+    # Cada letra va a ser procesada con los datos de x
+    ecuacion = re.sub(r'[a-zA-Z]', r'x', ecuacion)
+
+    # cambios necesarios para operar eval()
     ecuacion = re.sub(r'([a-zA-Z])(\()', r'\1*\2', ecuacion)    # Variable y paréntesis abierto
     ecuacion = re.sub(r'(\))([a-zA-Z0-9])', r'\1*\2', ecuacion)  # Paréntesis cerrado y variable o número
     ecuacion = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', ecuacion)      # Número y variable
@@ -23,17 +27,23 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'(\d)(π)', r'\1*\2', ecuacion)              #Numero y Pi
     ecuacion = re.sub(r'(π)(\()', r'\1*\2', ecuacion)              #Pi y parentesis
     ecuacion = re.sub(r'(π)([a-zA-Z])', r'\1*\2', ecuacion)
+    
+    ecuacion = re.sub(r'(\d)(<7>)', r'\1*\2', ecuacion)              
+    ecuacion = re.sub(r'(<7>)(\()', r'\1*\2', ecuacion)              
+    ecuacion = re.sub(r'(<7>)([a-zA-Z])', r'\1*\2', ecuacion)
 
-    #Reestaurar funciones trigonometricas
+    # Reestaurar funciones trigonometricas
     ecuacion = re.sub(r'\(<1>>', 'np.sin(', ecuacion)
     ecuacion = re.sub(r'\(<2>>', 'np.cos(', ecuacion)
     ecuacion = re.sub(r'\(<3>>', 'np.tan(', ecuacion)
     ecuacion = re.sub(r'\(<4-4>>', 'np.arcsin(', ecuacion)
     ecuacion = re.sub(r'\(<5-5>>', 'np.arccos(', ecuacion)
-    ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion)   
+    ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion) 
+    ecuacion = re.sub(r'<7>', 'e', ecuacion)  
     
     return ecuacion
 
+# Funcion para corregir la ecuacion que se guarda en el historial, para que no se guarde con "np." al inicio
 def correc_historial(ecuacion):
     ecuacion = re.sub(r'np.sin\(','sin(', ecuacion)
     ecuacion = re.sub(r'np.cos\(','cos(', ecuacion)
@@ -41,6 +51,7 @@ def correc_historial(ecuacion):
     ecuacion = re.sub(r'np.arcsin\(','csc(', ecuacion)
     ecuacion = re.sub(r'np.arccos\(','sec(', ecuacion)
     ecuacion = re.sub(r'np.arctan\(','ctn(', ecuacion) 
+    
 
     return ecuacion
 
@@ -77,17 +88,17 @@ def historial (funcion):
     global Historial
 
     #Aqui se guardan las operaciones anteriores en una tupla dentro de la lista "Historial"
-    Funcion_corregida = correc_historial(funcion)
+    Funcion_corregida = correc_historial (funcion)
     Historial.insert (0, Funcion_corregida)
     
-    actualizar_historial()
+    actualizar_historial ()
 
 #Funcion para los botones del historial
 def reemplazar (rem):
     """La función reemplazar cambiará la operación del historial a la consola.
     /n El argumento "rem" indica cual de los valores que se encuentra en los slots va a reemplazarse en la consola."""
     
-    from VIEW_cal_grafica import Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str, Entrada_funciones
+    from VIEW_cal_grafica import Entrada_funciones
     try:
         # Aqui lo que ocurre es que dependiendo del valor que tenga rem, va a buscarse la tupla correspondiente
         # restandose el valor -1, en este caso si rem = 1, va a buscarse la primera tupla y su primer elemento 
@@ -95,9 +106,10 @@ def reemplazar (rem):
         # monton de "elif" con distintas condiciones
 
         Funcion_a_reemplazar = Historial [rem-1]
-        
+        Nuevo_contenido = Entrada_funciones.get () + Funcion_a_reemplazar 
+
         Entrada_funciones.delete (0, tk.END)
-        Entrada_funciones.insert (0, Funcion_a_reemplazar)
+        Entrada_funciones.insert (0, Nuevo_contenido)
 
     except IndexError:
         pass
@@ -138,14 +150,14 @@ def guardar_indices (operacion):
 def acciones_del_historial (indice, invitado):
     """La función "acciones_del_historial" desplega un menu que permite eliminar opciones del historial o guardarlas en la base de datos."""
     
-    from VIEW_cal_grafica import Memory_frame, raiz, operaciones, funciones_incloud
-
+    from VIEW_cal_grafica import Memory_frame, raiz, update_cloud_functions
+    
     global indice_a_eliminar
     indice_a_eliminar = indice
     
     if invitado == False:
         Menu_de_acciones = tk.Menu (Memory_frame, tearoff= 0)
-        Menu_de_acciones.add_command (label= "Guardar en la nube", command= lambda: (guardar_indices (indice), operaciones.destroy (), funciones_incloud ()))
+        Menu_de_acciones.add_command (label= "Guardar en la nube", command= lambda: (guardar_indices (indice), update_cloud_functions ()))
         Menu_de_acciones.add_separator ()
         Menu_de_acciones.add_command (label= "Eliminar del historial", command= lambda: (eliminar_indices (), actualizar_historial ()))
     
@@ -161,7 +173,6 @@ def acciones_del_historial (indice, invitado):
 
 # Función para borrar todo el historial
 def clear_all ():
-
     """La función "clear_all" elimina todo el contenido del historial."""
     
     # El metodo ".Clear ()" vacia la lista historial
@@ -182,3 +193,40 @@ def reemplazar_en_la_nube (rem, operaciones_guardadas):
 
     except IndexError:
         pass
+def correc_ecuacion2 (ecuacion):
+    # Reemplazos para que las funciones trigonometricas sean accesibles al eval()
+    ecuacion = re.sub(r'sin\(', '(<1>>', ecuacion)
+    ecuacion = re.sub(r'cos\(', '(<2>>', ecuacion)
+    ecuacion = re.sub(r'tan\(', '(<3>>', ecuacion)
+    ecuacion = re.sub(r'csc\(', '(<4-4>>', ecuacion)
+    ecuacion = re.sub(r'sec\(', '(<5-5>>', ecuacion)
+    ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
+    ecuacion = re.sub(r'e','<7>',ecuacion)
+
+
+    # cambios necesarios para operar eval()
+    ecuacion = re.sub(r'([a-zA-Z])(\()', r'\1*\2', ecuacion)    # Variable y paréntesis abierto
+    ecuacion = re.sub(r'(\))([a-zA-Z0-9])', r'\1*\2', ecuacion)  # Paréntesis cerrado y variable o número
+    ecuacion = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', ecuacion)      # Número y variable
+    ecuacion = re.sub(r'([a-zA-Z])(\d)', r'\1*\2', ecuacion)      # Variable y número
+    ecuacion = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', ecuacion) # Dos variables
+    ecuacion = re.sub(r'(\))(\()', r'\1*\2', ecuacion)            # Paréntesis cerrado y abierto
+    ecuacion = re.sub(r'(\d)(\()', r'\1*\2', ecuacion)             # Número y paréntesis abierto
+    ecuacion = re.sub(r'(\d)(π)', r'\1*\2', ecuacion)              #Numero y Pi
+    ecuacion = re.sub(r'(π)(\()', r'\1*\2', ecuacion)              #Pi y parentesis
+    ecuacion = re.sub(r'(π)([a-zA-Z])', r'\1*\2', ecuacion)
+    
+    ecuacion = re.sub(r'(\d)(<7>)', r'\1*\2', ecuacion)              
+    ecuacion = re.sub(r'(<7>)(\()', r'\1*\2', ecuacion)              
+    ecuacion = re.sub(r'(<7>)([a-zA-Z])', r'\1*\2', ecuacion)
+
+    # Reestaurar funciones trigonometricas
+    ecuacion = re.sub(r'\(<1>>', 'np.sin(', ecuacion)
+    ecuacion = re.sub(r'\(<2>>', 'np.cos(', ecuacion)
+    ecuacion = re.sub(r'\(<3>>', 'np.tan(', ecuacion)
+    ecuacion = re.sub(r'\(<4-4>>', 'np.arcsin(', ecuacion)
+    ecuacion = re.sub(r'\(<5-5>>', 'np.arccos(', ecuacion)
+    ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion) 
+    ecuacion = re.sub(r'<7>', 'e', ecuacion)  
+    
+    return ecuacion

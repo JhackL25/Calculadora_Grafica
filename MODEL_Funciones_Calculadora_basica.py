@@ -91,8 +91,8 @@ def actualizar_historial ():
         view.Slot6_str.set (f"Operación: {Historial [5][0]} = {Historial [5][1]}")
     except IndexError:
         pass
-
 #Funcion del historial (se utiliza una lista para almacenar las operaciones)
+
 def historial (Operacion, total):
     """La función historial almacena los datos de las operaciones anteriores para que las vea el usuario"""
     global Historial
@@ -104,7 +104,7 @@ def historial (Operacion, total):
 #Funcion para los botones del historial
 def reemplazar (rem):
     """La función reemplazar cambiará la operación del historial a la consola.
-    \n El argumento "rem" indica cual de los valores que se encuentra en los slots va a reemplazarse en la consola."""
+    /n El argumento "rem" indica cual de los valores que se encuentra en los slots va a reemplazarse en la consola."""
     global show_ex
     try:
         # Aqui lo que ocurre es que dependiendo del valor que tenga rem, va a buscarse la tupla correspondiente
@@ -117,7 +117,7 @@ def reemplazar (rem):
 
     except IndexError:
         pass
-    
+
 #Funcion de ans
 def ANS ():
     """La función ANS devuelve el último resultado de la operación anterior."""
@@ -141,7 +141,7 @@ def guardar_indices (operacion):
     import MODEL_firebase as connect
     import firebase_controller as inv
 
-    # Guardadp de operaciones
+    # Guardado de operaciones
     try:
         if operacion == 1:
             connect.guardar_operacion (inv.True_User, f"{Historial [0][0]}")
@@ -161,14 +161,15 @@ def guardar_indices (operacion):
 # Funciones de guardado
 def acciones_del_historial (indice, invitado):
     """La función "acciones_del_historial" desplega un menu que permite eliminar opciones del historial o guardarlas en la base de datos."""
-    from VIEW_Calculadora_basica import operaciones_incloud, operaciones
     
+    from VIEW_Calculadora_basica import update_cloud_operations
+
     global indice_a_eliminar
     indice_a_eliminar = indice
     
     if invitado == False:
         Menu_de_acciones = Menu (view.Memory_frame, tearoff= 0)
-        Menu_de_acciones.add_command (label= "Guardar en la nube", command= lambda: (guardar_indices (indice), operaciones.destroy(), operaciones_incloud ()))
+        Menu_de_acciones.add_command (label= "Guardar en la nube", command= lambda: (guardar_indices (indice), update_cloud_operations ()))
         Menu_de_acciones.add_separator ()
         Menu_de_acciones.add_command (label= "Eliminar del historial", command= lambda: (eliminar_indices (), actualizar_historial ()))
     

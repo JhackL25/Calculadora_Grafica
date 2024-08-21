@@ -3,11 +3,11 @@ import MODEL_Funciones_Calculadora_basica as model
 import VIEW_cal_grafica as graf
 
 def calculadora_basica ():
-    global show_in_label, Variable_de_control, Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, raiz, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str
+    global show_in_label, Variable_de_control, Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, raiz, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str, Menu_principal
 
     #Creacion de la ventana
     raiz = Toplevel ()
-    raiz.geometry ("610x600")
+    raiz.geometry ("600x645")
     raiz.title ("Calculadora basica")
     raiz.resizable (False, False)
 
@@ -17,8 +17,6 @@ def calculadora_basica ():
 
     #Opciones del menu
     Menu_principal.add_command (label= "Calculadora gráfica", command = lambda: ((raiz.withdraw(), graf.cal_graf_tkinter_vs ())))
-    Menu_principal.add_command (label= "Calculadora básica")
-    Menu_principal.add_command (label= "Servicios en la nube")
     
     #Variable para la consola
     show_in_label = StringVar ()
@@ -37,7 +35,7 @@ def calculadora_basica ():
     Titulo.grid (column= 0, row= 0)
 
     #Consola (Aquí se muestran los caracteres que utilice la calculadora)
-    consola = Label (Ventana_principal, textvariable= show_in_label, font= ("consolas",18), bg= "white", width= 24, height=2, borderwidth= 1, relief= "groove")
+    consola = Label (Ventana_principal, textvariable= show_in_label, font= ("consolas", 18), bg= "white", width= 24, height= 2, borderwidth= 1, relief= "groove")
     consola.grid (row= 0, column= 1, sticky= N+E+S+W)
 
     #Frame de botones
@@ -145,15 +143,17 @@ def calculadora_basica ():
 
 # Ver operaciones guardadas
 def operaciones_incloud ():
+    """La Función "operaciones_incloud" accede a las operaciones guardadas en la base de datos."""
     import MODEL_firebase as connect
     import firebase_controller as inv
-    import MODEL_Funciones_Calculadora_basica as mod
+    from MODEL_Funciones_Calculadora_basica import reemplazar_en_la_nube
     
     operaciones_guardadas = connect.leer_operaciones (inv.True_User)
 
     global operaciones
+
     operaciones = Frame (raiz, borderwidth= 1, relief= "solid")
-    operaciones.grid (column= 1, row= 1, sticky= N)
+    operaciones.grid (column= 1, row= 1, pady= 5)
     
     Operaciones_info = Label (operaciones, text= "Operaciones guardadas en la nube", fg= "green", width= 30)
     Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
@@ -170,29 +170,53 @@ def operaciones_incloud ():
                 if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
                     break
                 else:
-                    ops_label = Button (operaciones, text= f"{i}", width= 30, background= "light green", command= lambda reemplazable1 = reemplazable: (mod.reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
+                    ops_label = Button (operaciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
                     ops_label.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
                     reemplazable += 1
-
-            # Boton para borrar el historial
-                    # Arreglar con urgencia 
-            # numero_de_fila = 2
-            # reemplazable = 1
-            # indice = 1
-            # for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
-            #     if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
-            #         break
-            #     else:
-            #         ops_label = Button (operaciones, text= "...", width= 2, background= "light green", command= lambda indice_a_eliminar = indice: (mod.acciones_del_historial_cloud (indice, inv.True_User)))
-            #         ops_label.grid (column= 1, row= numero_de_fila)
-            #         numero_de_fila += 1
-            #         reemplazable += 1
-            #         indice += 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:
         # Cuando el usuario no tenga operaciones en la base de datos 
         # se le va a informar a través de un label
+        no_operaciones = Label (operaciones, text= "No tiene operaciones guardadas en la nube")
+        no_operaciones.grid (column= 0, row= 3)
+
+# Funcion para actualizar el historial de operaciones en la nube
+def update_cloud_operations():
+    """La función "update_cloud_operations" actualiza la vista de los botones del historial de la base de datos."""
+    import MODEL_firebase as connect
+    import firebase_controller as inv
+    from MODEL_Funciones_Calculadora_basica import reemplazar_en_la_nube
+    
+    operaciones_guardadas = connect.leer_operaciones (inv.True_User)
+    
+    # Este ciclo se utiliza para eliminar todos los "widgets" hijos del frame operaciones
+    for widget in operaciones.winfo_children ():      
+        widget.destroy ()
+        
+    try:
+        Operaciones_info = Label (operaciones, text= "Operaciones guardadas en la nube", fg= "green", width= 30)
+        Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
+    
+        Usuario = Label (operaciones, text= f" Usuario accedido: {inv.True_User}", width= 30)
+        Usuario.grid (column= 0, row= 1)
+        
+        if len(operaciones_guardadas) > 0:
+            numero_de_fila = 2
+            reemplazable = 1
+            
+            for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
+                if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
+                    break
+                else:
+                    ops_label = Button (operaciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
+                    ops_label.grid (column= 0, row= numero_de_fila)
+                    numero_de_fila += 1
+                    reemplazable += 1
+        else:
+            raise IndexError # Pasa al bloque except   
+    except IndexError:
+        # Cuando el usuario no tenga operaciones en la base de datos se le va a informar a través de un label
         no_operaciones = Label (operaciones, text= "No tiene operaciones guardadas en la nube")
         no_operaciones.grid (column= 0, row= 3)

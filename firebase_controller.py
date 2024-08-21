@@ -143,6 +143,7 @@ def Acceder ():
                     run.run () # Ejecuta la calculadora basica
                     True_User = Estado_de_acceso # Almacena el nombre de usuario
                     runner.operaciones_incloud () # Busca operaciones con el nombre de usuario proporcionado
+                    runner.Menu_principal.add_command (label= "Servicios en la nube")
                     raiz_acceso.destroy () # Destruye la ventana de acceso a la base de datos
                     model.Historial.clear () ; model.limpiar () # Limpia el historial y la consola cuando se cierre la calculadora básica
 
