@@ -105,33 +105,35 @@ def calculadora_basica ():
     erase_historial.grid (column= 1, row= 0)
 
     # Botones del teclado de la calculadora
+    Fuente_botones_calbasica = ("consolas", 12)
+    
     # Digitos
-    Bo0= Button (win_bt, padx= 30, pady=30, text= "0", command= lambda: model.go_to_console("0")).grid (row=5, column=0, sticky=W+E)
-    Bo1= Button (win_bt, padx= 30, pady=30, text= "1", command= lambda: model.go_to_console("1")).grid (row=4, column=0, sticky=W+E)
-    Bo2= Button (win_bt, padx= 30, pady=30, text= "2", command= lambda: model.go_to_console("2")).grid (row=4, column=1, sticky=W+E)
-    Bo3= Button (win_bt, padx= 30, pady=30, text= "3", command= lambda: model.go_to_console("3")).grid (row=4, column=2, sticky=W+E)
-    Bo4= Button (win_bt, padx= 30, pady=30, text= "4", command= lambda: model.go_to_console("4")).grid (row=3, column=0, sticky=W+E)
-    Bo5= Button (win_bt, padx= 30, pady=30, text= "5", command= lambda: model.go_to_console("5")).grid (row=3, column=1, sticky=W+E)
-    Bo6= Button (win_bt, padx= 30, pady=30, text= "6", command= lambda: model.go_to_console("6")).grid (row=3, column=2, sticky=W+E)
-    Bo7= Button (win_bt, padx= 30, pady=30, text= "7", command= lambda: model.go_to_console("7")).grid (row=2, column=0, sticky=W+E)
-    Bo8= Button (win_bt, padx= 30, pady=30, text= "8", command= lambda: model.go_to_console("8")).grid (row=2, column=1, sticky=W+E)
-    Bo9= Button (win_bt, padx= 30, pady=30, text= "9", command= lambda: model.go_to_console("9")).grid (row=2, column=2, sticky=W+E)
+    Bo0= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "0", command= lambda: model.go_to_console("0")).grid (row=5, column=0, sticky=W+E)
+    Bo1= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "1", command= lambda: model.go_to_console("1")).grid (row=4, column=0, sticky=W+E)
+    Bo2= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "2", command= lambda: model.go_to_console("2")).grid (row=4, column=1, sticky=W+E)
+    Bo3= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "3", command= lambda: model.go_to_console("3")).grid (row=4, column=2, sticky=W+E)
+    Bo4= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "4", command= lambda: model.go_to_console("4")).grid (row=3, column=0, sticky=W+E)
+    Bo5= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "5", command= lambda: model.go_to_console("5")).grid (row=3, column=1, sticky=W+E)
+    Bo6= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "6", command= lambda: model.go_to_console("6")).grid (row=3, column=2, sticky=W+E)
+    Bo7= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "7", command= lambda: model.go_to_console("7")).grid (row=2, column=0, sticky=W+E)
+    Bo8= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "8", command= lambda: model.go_to_console("8")).grid (row=2, column=1, sticky=W+E)
+    Bo9= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "9", command= lambda: model.go_to_console("9")).grid (row=2, column=2, sticky=W+E)
 
     # Simbolos 
-    B_suma= Button (win_bt, padx= 30, pady=30, text= "+", command= lambda: model.go_to_console("+")).grid (row=2, column=3, sticky=W+E)
-    B_menos= Button (win_bt, padx= 30, pady=30, text= "-", command= lambda: model.go_to_console("-")).grid (row=3, column=3, sticky=W+E)
-    B_multiplicacion= Button (win_bt, padx= 30, pady=30, text= "x", command= lambda: model.go_to_console("*")).grid (row=4, column=3, sticky=W+E)
-    B_division= Button (win_bt, padx= 30, pady=30, text= "÷", command= lambda: model.go_to_console("/")).grid (row=5, column=3, sticky=W+E)
-    BPo= Button (win_bt, padx= 30, pady=30, text= ".", command= lambda: model.go_to_console(".")).grid (row=5, column=1, sticky=W+E)
+    B_suma= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "+", command= lambda: model.go_to_console("+")).grid (row=2, column=3, sticky=W+E)
+    B_menos= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "-", command= lambda: model.go_to_console("-")).grid (row=3, column=3, sticky=W+E)
+    B_multiplicacion= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "x", command= lambda: model.go_to_console("*")).grid (row=4, column=3, sticky=W+E)
+    B_division= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "÷", command= lambda: model.go_to_console("/")).grid (row=5, column=3, sticky=W+E)
+    BPo= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= ".", command= lambda: model.go_to_console(".")).grid (row=5, column=1, sticky=W+E)
 
     # Botones con funciones especiales 
-    B_Potencia= Button (win_bt, padx= 30, pady=30, text= "**", command= lambda: model.go_to_console("**")).grid (row=0, column=0, sticky=W+E)
-    B_Potencia2= Button (win_bt, padx= 30, pady=30, text= "(", command= lambda: model.go_to_console("(")).grid (row=0, column=1, sticky=W+E)
-    B_Potencia3= Button (win_bt, padx= 30, pady=30, text= ")", command= lambda: model.go_to_console(")")).grid (row=0, column=2, sticky=W+E)
-    B_ans= Button (win_bt, padx= 30, pady=30, text= "ANS", command= model.ANS).grid (row=0, column=3, sticky=W+E)
-    boeq= Button (win_bt, padx= 30, pady=30, text= "=", command= model.igual).grid (row=5, column=2, sticky=W+E)
-    Clear= Button (win_bt, text= "C", pady=30, command = model.limpiar).grid (row=1, column=0, sticky=W+E)
-    Errase= Button (win_bt, pady=30, text= "<---", command = model.delete).grid (row=1, column=1, columnspan= 3,sticky=W+E)
+    B_Potencia= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "**", command= lambda: model.go_to_console("**")); B_Potencia.grid (row=0, column=0, sticky=W+E)
+    B_Parentesis1= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "(", command= lambda: model.go_to_console("(")); B_Parentesis1.grid (row=0, column=1, sticky=W+E)
+    B_Parentesis2= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= ")", command= lambda: model.go_to_console(")")); B_Parentesis2.grid (row=0, column=2, sticky=W+E)
+    B_ans= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "ANS", command= model.ANS); B_ans.grid (row=0, column=3, sticky=W+E)
+    boeq= Button (win_bt, padx= 25, pady= 25, font= Fuente_botones_calbasica, text= "=", command= model.igual); boeq.grid (row=5, column=2, sticky=W+E)
+    Clear= Button (win_bt, text= "C", font= Fuente_botones_calbasica, pady= 25, command = model.limpiar); Clear.grid (row=1, column=0, sticky=W+E)
+    Erase= Button (win_bt, pady=25, font= Fuente_botones_calbasica, text= "←", command = model.delete); Erase.grid (row=1, column=1, columnspan= 3,sticky=W+E)
 
     # Funcion para que se restaure la ventana inicial
     def restaurar_inicio ():
@@ -159,21 +161,33 @@ def operaciones_incloud ():
     Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
     
     Usuario = Label (operaciones, text= f" Usuario accedido: {inv.True_User}", width= 30)
-    Usuario.grid (column= 0, row= 1)
+    Usuario.grid (column= 0, row= 1, columnspan= 2)
     
     try:
         if len(operaciones_guardadas) > 0:
             numero_de_fila = 2
-            reemplazable = 1
+            reemplazable = 1 
             
             for numero_de_iteraciones, i in enumerate (operaciones_guardadas):
                 if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
                     break
                 else:
-                    ops_label = Button (operaciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
+                    ops_label = Button (operaciones, text= f"{i}", width= 25, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
                     ops_label.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
                     reemplazable += 1
+            
+            # Reasignacion numero de fila
+            numero_de_fila = 2
+            eliminable = -1
+            for numero_iteraciones in enumerate (operaciones_guardadas):
+                if numero_iteraciones == 12:
+                    break
+                else:
+                    ops_button = Button (operaciones, text= "🗑", width= 5, relief= "flat", background= "Green", command= lambda eliminar = eliminable: (connect.delete_funciones (inv.True_User, eliminar, "operaciones"), update_cloud_operations ()))
+                    ops_button.grid (column= 1, row= numero_de_fila)
+                    numero_de_fila += 1
+                    eliminable -= 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:
@@ -200,7 +214,7 @@ def update_cloud_operations():
         Operaciones_info.grid (column= 0, row= 0, columnspan= 2)
     
         Usuario = Label (operaciones, text= f" Usuario accedido: {inv.True_User}", width= 30)
-        Usuario.grid (column= 0, row= 1)
+        Usuario.grid (column= 0, row= 1, columnspan= 2)
         
         if len(operaciones_guardadas) > 0:
             numero_de_fila = 2
@@ -210,10 +224,22 @@ def update_cloud_operations():
                 if numero_de_iteraciones == 12: # Esto es para que solo se puedan hacer 12 iteraciones
                     break
                 else:
-                    ops_label = Button (operaciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
+                    ops_label = Button (operaciones, text= f"{i}", width= 25, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, operaciones_guardadas)))
                     ops_label.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
                     reemplazable += 1
+            
+            # Reasignacion numero de fila
+            numero_de_fila = 2
+            eliminable = -1
+            for numero_iteraciones in enumerate (operaciones_guardadas):
+                if numero_iteraciones == 12:
+                    break
+                else:
+                    ops_button = Button (operaciones, text= "🗑", width= 5, relief= "flat", background= "Green", command= lambda eliminar = eliminable: (connect.delete_funciones (inv.True_User, eliminar, "operaciones"), update_cloud_operations ()))
+                    ops_button.grid (column= 1, row= numero_de_fila)
+                    numero_de_fila += 1
+                    eliminable -= 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:

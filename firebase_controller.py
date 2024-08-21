@@ -7,7 +7,6 @@ import MODEL_firebase as connections
 #Funciones para la vista del menu de la base de datos
 #Funcion para abrir el registro
 def registro ():
-    
     raiz_registro = Toplevel()
     raiz_registro.geometry("400x190")
     raiz_registro.resizable(False, False)
@@ -143,7 +142,14 @@ def Acceder ():
                     run.run () # Ejecuta la calculadora basica
                     True_User = Estado_de_acceso # Almacena el nombre de usuario
                     runner.operaciones_incloud () # Busca operaciones con el nombre de usuario proporcionado
-                    runner.Menu_principal.add_command (label= "Servicios en la nube")
+                    # Menu de servicios en la nube
+                    cloud_services = Menu (tearoff= 0)
+                    cloud_services.add_command (label= "Buscar su usuario", command= search_users); cloud_services.add_separator ()
+                    cloud_services.add_command (label= "Modificar datos del usuario", command= modificar_datos); cloud_services.add_separator ()
+                    cloud_services.add_command (label= "Eliminar su usuario", command= del_users)
+                    
+                    runner.Menu_principal.add_cascade (label= "Servicios en la nube", menu= cloud_services)
+
                     raiz_acceso.destroy () # Destruye la ventana de acceso a la base de datos
                     model.Historial.clear () ; model.limpiar () # Limpia el historial y la consola cuando se cierre la calculadora básica
 
@@ -449,17 +455,25 @@ def del_users ():
                 no_user_var.set ("Debe ingresar un nombre de usuario para poder borrarlo")           
             
             elif connections.read (borrable) == True:
-                final_delete = messagebox.askyesno (title= "Advertencia" ,message= "¿Desea continuar?, tenga en cuenta que su usuario sera borrado para siempre")
+                final_delete = messagebox.askyesno (title= "Advertencia", message= "¿Desea continuar?, tenga en cuenta que su usuario será borrado para siempre")
                 
                 if final_delete != False:
-                    #Aqui se utiliza la función para borrar del model llamada "delete"
+                    # Aqui se utiliza la función para borrar del model llamada "delete"
+                    # cuando el usuario ha aceptado eliminar su usuario
                     connections.delete (borrable) 
 
                     deleted_user = Label(delU_raiz, text= "El usuario se ha eliminado correctamente", font= (None, 14),padx= 460, pady=100)
                     deleted_user.place (relx= 0.5, rely= 0.4, anchor= "center")
 
-                    end_del_us = Button (delU_raiz, text= "Cerrar ventana para borrar usuarios", command= lambda: delU_raiz.destroy())
+                    end_del_us = Button (delU_raiz, text= "Cerrar ventana para borrar usuarios", command= lambda: (delU_raiz.destroy(), forzar_ventana_de_inicio ()))
                     end_del_us.place (relx= 0.5, rely= 0.7, anchor= "center")
+                    
+                    def forzar_ventana_de_inicio ():
+                        from VIEW_cal_grafica import raiz as cal_basica_raiz
+                        import VIEW_Ventana_de_inicio as vp
+                        
+                        vp.root_prueba.deiconify ()
+                        cal_basica_raiz.destroy ()
                 else:
                     pass
             else:

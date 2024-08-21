@@ -125,18 +125,6 @@ def leer_operaciones (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene operaciones guardadas
 
-# Funcion para eliminar operaciones de la calculadora basica de la base de datos
-def delete_operaciones (usuario, clave):
-    """value: Recibe el valor de una clave para buscarlo en la base de datos"""
-   # Recibe el nombre en value y lo busca como clave en la base de datos
-    ref = db.reference(f'server/saving-data/Users/{usuario}/operaciones/{clave}')
-    if ref.get() != None:  # Condicion para saber si esta el nombre dado esta en la base de datos
-        # Borra la clave dada en ref (vendria a ser el usuario)
-        ref.delete()    
-    else:
-        print('No tienes operaciones guardadas con esa clave')
-
-
 # Funciones guardado en la nube cal_grafica
 # Se hace uso de la variable 'ref' (la de arriba) que tiene una refencia en la base de datos a los usuarios
 
@@ -174,13 +162,13 @@ def leer_funcion_grafica (usuario):
     else:
         return [] # Ocurre cuando el usuario no tiene funciones guardadas
 
-# Funcion para eliminar funciones de la calculadora basica de la base de datos
-def delete_funciones (usuario, numero_funcion):
+# Funcion para eliminar funciones o operaciones de la base de datos
+def delete_funciones (usuario, numero_funcion,child):
     # Recibe el nombre del usuario y lo busca como clave en la base de datos
     ref = db.reference(f'server/saving-data/Users/{usuario}')
 
     if ref.get() is not None:  # Condición para saber si el nombre dado está en la base de datos
-        ref = db.reference(f'server/saving-data/Users/{usuario}/funciones')
+        ref = db.reference(f'server/saving-data/Users/{usuario}/{child}')
         
         # Obtenemos las operaciones existentes
         funciones_existentes = ref.get()

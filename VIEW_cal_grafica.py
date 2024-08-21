@@ -199,16 +199,20 @@ def cal_graf_tkinter_vs ():
 
             Grafico = Graficos_3D (funcion_str)
             Frame_3d = FigureCanvasTkAgg (Grafico, master= Ventana_3d)
-            Frame_3d.get_tk_widget ().pack (fill= "both")
+            Frame_3d.get_tk_widget ().pack (fill= "both", expand= True)
 
             Herramientas = NavigationToolbar2Tk (Frame_3d, Ventana_3d, pack_toolbar= True)
             Herramientas.update ()
             
-            def Eliminar_grafico ():
-                plt.close ()
-                Ventana_3d.destroy ()
+            global Eliminar_grafico_3D
+            def Eliminar_grafico_3D ():
+                try:
+                    plt.close ()
+                    Ventana_3d.destroy ()
+                except NameError:
+                    pass
 
-            Ventana_3d.protocol ("WM_DELETE_WINDOW", Eliminar_grafico)
+        Ventana_3d.protocol ("WM_DELETE_WINDOW", Eliminar_grafico_3D)
 
     # Funcion para deshabilitar la cuadriculas
     def Deshabilitar_cuadriculas ():
@@ -409,22 +413,29 @@ def cal_graf_tkinter_vs ():
     Grafica3D_button.place (x= 300, y= 170, anchor= "center")
 
     #Vinculacion del boton para graficar 3D al estilo
-    Grafica3D_button.bind("<Enter>", Cursor_dentro)
-    Grafica3D_button.bind("<Leave>", Cursor_fuera)
+    Grafica3D_button.bind ("<Enter>", Cursor_dentro)
+    Grafica3D_button.bind ("<Leave>", Cursor_fuera)
 
     # Boton para deshabilitar la cuadricula
     Deshabilitar_cuadricula = tk.Button (raiz, text= "Deshabilitar cuadricula", font= ("Helvetica", 9), borderwidth= 1, relief= "flat", command= Deshabilitar_cuadriculas)
     Deshabilitar_cuadricula.place (x= 420, y= 170, anchor= "center")
     
     #Vinculacion del boton para graficar 3D al estilo
-    Deshabilitar_cuadricula.bind("<Enter>", Cursor_dentro)
-    Deshabilitar_cuadricula.bind("<Leave>", Cursor_fuera)
+    Deshabilitar_cuadricula.bind ("<Enter>", Cursor_dentro)
+    Deshabilitar_cuadricula.bind ("<Leave>", Cursor_fuera)
 
     # Casos en donde se debe activar el modo invitado
     if Variable_de_control == False:
         # En caso de que el usuario no acceda al modo invitado se va a activar el historial de la nube y esta opcion del menu
         funciones_incloud ()
-        Menu_principal.add_command (label= "Servicios en la nube")
+        # Menu de servicios en la nube
+        from firebase_controller import search_users, modificar_datos, del_users
+        cloud_services = tk.Menu (tearoff= 0)
+        cloud_services.add_command (label= "Buscar su usuario", command= search_users); cloud_services.add_separator ()
+        cloud_services.add_command (label= "Modificar datos del usuario", command= modificar_datos); cloud_services.add_separator ()
+        cloud_services.add_command (label= "Eliminar su usuario", command= del_users)
+        
+        Menu_principal.add_cascade (label= "Servicios en la nube", menu= cloud_services)
     else:
         # En caso de que el usuario acceda al modo invitado se va a mostrar el siguiente mensaje 
         Menu_principal.add_command (label= "Servicios en la nube", state= "disabled")
@@ -436,6 +447,12 @@ def cal_graf_tkinter_vs ():
         import VIEW_Calculadora_basica as basic
         raiz.destroy ()
         plt.close () # Para que se cierre el grafico, que se encuentra en el frame
+        def Eliminar_graficos3d ():  # Elimina la grafica 3D
+            try:
+                Eliminar_grafico_3D ()
+            except NameError:
+                pass
+        Eliminar_graficos3d ()
         basic.raiz.deiconify ()
 
     raiz.protocol ("WM_DELETE_WINDOW", restaurar_inicio)
@@ -463,7 +480,7 @@ def funciones_incloud ():
     Funciones_info.grid (column= 0, row= 0, columnspan= 2)
     
     Usuario = tk.Label (Funciones, text= f"Usuario accedido: {inv.True_User}", width= 30)
-    Usuario.grid (column= 0, row= 1)
+    Usuario.grid (column= 0, row= 1, columnspan= 2)
     
     try:
         if len(funciones_guardadas) > 0:
@@ -476,10 +493,22 @@ def funciones_incloud ():
                 else:
                     from MODEL_grafica import reemplazar_en_la_nube
 
-                    funcs_buttons = tk.Button (Funciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, funciones_guardadas)))
+                    funcs_buttons = tk.Button (Funciones, text= f"{i}", width= 25, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, funciones_guardadas)))
                     funcs_buttons.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
                     reemplazable += 1
+            
+            # Reasignacion numero de fila
+            numero_de_fila = 2
+            eliminable = -1
+            for numero_iteraciones in enumerate (funciones_guardadas):
+                if numero_iteraciones == 12:
+                    break
+                else:
+                    ops_button = tk.Button (Funciones, text= "🗑", width= 5, relief= "flat", background= "Green", command= lambda eliminar = eliminable: (connect.delete_funciones (inv.True_User, eliminar, "funciones"), update_cloud_functions ()))
+                    ops_button.grid (column= 1, row= numero_de_fila)
+                    numero_de_fila += 1
+                    eliminable -= 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:
@@ -508,7 +537,7 @@ def update_cloud_functions():
         Funciones_info.grid (column= 0, row= 0, columnspan= 2)
     
         Usuario = tk.Label (Funciones, text= f"Usuario accedido: {inv.True_User}", width= 30)
-        Usuario.grid (column= 0, row= 1)
+        Usuario.grid (column= 0, row= 1, columnspan= 2)
         
         if len(funciones_guardadas) > 0:
             numero_de_fila = 2
@@ -520,10 +549,21 @@ def update_cloud_functions():
                 else:
                     from MODEL_grafica import reemplazar_en_la_nube
 
-                    funcs_buttons = tk.Button (Funciones, text= f"{i}", width= 30, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, funciones_guardadas)))
+                    funcs_buttons = tk.Button (Funciones, text= f"{i}", width= 25, relief= "flat", background= "light green", command= lambda reemplazable1 = reemplazable: (reemplazar_en_la_nube (reemplazable1, funciones_guardadas)))
                     funcs_buttons.grid (column= 0, row= numero_de_fila)
                     numero_de_fila += 1
                     reemplazable += 1
+            # Reasignacion numero de fila
+            numero_de_fila = 2
+            eliminable = -1
+            for numero_iteraciones in enumerate (funciones_guardadas):
+                if numero_iteraciones == 12:
+                    break
+                else:
+                    ops_button = tk.Button (Funciones, text= "🗑", width= 5, relief= "flat", background= "Green", command= lambda eliminar = eliminable: (connect.delete_funciones (inv.True_User, eliminar, "funciones"), update_cloud_functions ()))
+                    ops_button.grid (column= 1, row= numero_de_fila)
+                    numero_de_fila += 1
+                    eliminable -= 1
         else:
             raise IndexError # Pasa al bloque except   
     except IndexError:
