@@ -46,21 +46,21 @@ def ventana_principal ():
     Acceder_como_invitado = ttk.Button (frame_menu, text= "Acceder como invitado", width= 25, command= lambda: (root_prueba.withdraw (), model.Historial.clear (), run.run (), iniciar_modo_invitado (), model.limpiar ()))
     Acceder_como_invitado.grid (row= 2, column= 0, columnspan= 2, sticky="NS", pady= 50)
 
-    # Funcion para eliminar todo
-    def finalizar_experiencia ():
-        try:
-            from VIEW_cal_grafica import raiz as raiz_grafica
-            from VIEW_Calculadora_basica import raiz as raiz_basica
-            root_prueba.destroy ()
-            raiz_basica.destroy ()
-            raiz_grafica.destroy ()
-        except Exception as e:
-            if e:
-                root_prueba.destroy ()
-            else:
-                root_prueba.destroy ()
+    # # Funcion para eliminar todo
+    # def finalizar_experiencia ():
+    #     try:
+    #         from VIEW_cal_grafica import raiz as raiz_grafica
+    #         from VIEW_Calculadora_basica import raiz as raiz_basica
+    #         root_prueba.destroy ()
+    #         raiz_basica.destroy ()
+    #         raiz_grafica.destroy ()
+    #     except Exception as e:
+    #         if e:
+    #             root_prueba.destroy ()
+    #         else:
+    #             root_prueba.destroy ()
 
-    # Vinculación del "cerrado de aplicacion con "finalizar_experencia""
-    root_prueba.protocol ("WM_DELETE_WINDOW", finalizar_experiencia)
+    # # Vinculación del "cerrado de aplicacion con "finalizar_experencia""
+    # root_prueba.protocol ("WM_DELETE_WINDOW", finalizar_experiencia)
 
     root_prueba.mainloop ()
