@@ -10,7 +10,7 @@ firebase_admin.initialize_app(cred, {'databaseURL': 'https://geogebra-969a5-defa
 
 # Se guarda en la variable 'ref' una refencia en la base de datos
 ref = db.reference('server/saving-data')
-
+    
 # Crea un nodo secundario llamado 'Users'
 users_ref = ref.child('Users')
 

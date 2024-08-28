@@ -447,16 +447,27 @@ def modificar_datos ():
 
 #Función para borrar usuarios
 def del_users ():
+    try:
+        from VIEW_Calculadora_basica import raiz
+        raiz.withdraw ()
+        try:
+            from VIEW_cal_grafica import raiz as graf
+            graf.withdraw ()
+        except:
+            pass
+    except:
+        pass
 
     def del_verificate():
         try:
             borrable = del_entry.get ()
-            if borrable == "":
-                no_user_var.set ("Debe ingresar un nombre de usuario para poder borrarlo")           
+            Pword_comprobation = Pword_entry.get ()
+            if borrable == "" or Pword_comprobation == "":
+                no_user_var.set ("Debe ingresar un nombre de usuario y contraseña para poder borrarlo")           
             
-            elif connections.read (borrable) == True:
+            elif connections.read (borrable) == True and borrable == connections.acceso_usuarios (borrable, Pword_comprobation):
                 final_delete = messagebox.askyesno (title= "Advertencia", message= "¿Desea continuar?, tenga en cuenta que su usuario será borrado para siempre")
-                
+
                 if final_delete != False:
                     # Aqui se utiliza la función para borrar del model llamada "delete"
                     # cuando el usuario ha aceptado eliminar su usuario
@@ -469,11 +480,15 @@ def del_users ():
                     end_del_us.place (relx= 0.5, rely= 0.7, anchor= "center")
                     
                     def forzar_ventana_de_inicio ():
-                        from VIEW_cal_grafica import raiz as cal_basica_raiz
-                        import VIEW_Ventana_de_inicio as vp
-                        
-                        vp.root_prueba.deiconify ()
-                        cal_basica_raiz.destroy ()
+                        try:
+                            import VIEW_Ventana_de_inicio as vp
+                            from main import iniciar
+
+                            vp.root_prueba.destroy ()
+                            iniciar ()
+
+                        except ImportError:
+                            pass # En caso de que npo pueda importar alguna de las funciones
                 else:
                     pass
             else:
@@ -482,23 +497,51 @@ def del_users ():
                 no_user_var.set ("El usuario que ingreso no esta registrado en la base de datos")
 
     delU_raiz = Toplevel ()
-    delU_raiz.title ("Eliminar usuario")
-    delU_raiz.geometry ("460x100")
+    delU_raiz.title ("Eliminar usuarios")
+    delU_raiz.geometry ("478x150")
     delU_raiz.resizable (False, False)
 
     #Label de instruccion
-    delete_label = Label (delU_raiz, text= "Ingrese el nombre de usuario que desea eliminar", font= (None, 16))
-    delete_label.grid (row= 0, column= 0)
+    delete_label = Label (delU_raiz, text= "Ingrese el nombre de usuario que desea eliminar\ny su contraseña", font= (None, 16))
+    delete_label.grid (row= 0, column= 0, columnspan= 2)
 
     #Label para mostrar si la entrada esta vacia
     no_user_var = StringVar ()
     no_user = Label (delU_raiz, textvariable= no_user_var)
-    no_user.grid (row= 2, column=0)
+    no_user.grid (row= 3, column=0, columnspan= 2)
+    
+    # Label usuario
+    label_usuario = Label (delU_raiz, text= "Usuario", width= 10)
+    label_usuario.grid (row= 1, column= 0)
+    
+    # Label contraseña
+    label_contraseña = Label (delU_raiz, text= "Contraseña", width= 10)
+    label_contraseña.grid (row= 2, column= 0)
     
     #Entrada para ingresar el usuario
     del_entry = Entry (delU_raiz, width= 40)
-    del_entry.grid (row= 1, column= 0)
+    del_entry.grid (row= 1, column= 1)
+    
+    # Entrada para contraseña
+    Pword_entry =Entry (delU_raiz, width= 40)
+    Pword_entry.grid (row= 2, column= 1)
 
     #Boton de enviar
     del_enviar = Button (delU_raiz, text= "Eliminar usuario", command= del_verificate)
-    del_enviar.grid (row= 3, column= 0)
+    del_enviar.grid (row= 4, column= 0, columnspan= 2)
+
+    def Abort_delete ():
+        try:
+            from VIEW_Calculadora_basica import raiz
+            delU_raiz.destroy ()
+            raiz.deiconify ()
+        except:
+            pass
+        
+        try:
+            from VIEW_cal_grafica import raiz as graf
+            delU_raiz.destroy ()
+            graf.deiconify ()
+        except:
+            pass
+    delU_raiz.protocol ("WM_DELETE_WINDOW", Abort_delete)
