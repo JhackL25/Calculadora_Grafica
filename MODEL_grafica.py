@@ -27,6 +27,11 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'(\d)(π)', r'\1*\2', ecuacion)              #Numero y Pi
     ecuacion = re.sub(r'(π)(\()', r'\1*\2', ecuacion)              #Pi y parentesis
     ecuacion = re.sub(r'(π)([a-zA-Z])', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'([a-zA-Z])(π)', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'(<7>)(π)', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'(π)(<7>)', r'\1*\2', ecuacion)
+    
+
     
     ecuacion = re.sub(r'(\d)(<7>)', r'\1*\2', ecuacion)              
     ecuacion = re.sub(r'(<7>)(\()', r'\1*\2', ecuacion)              
@@ -193,7 +198,7 @@ def reemplazar_en_la_nube (rem, operaciones_guardadas):
 
     except IndexError:
         pass
-def correc_ecuacion2 (ecuacion):
+def correc_ecuacion2 (ecuacion): # Para hacer el 3D
     # Reemplazos para que las funciones trigonometricas sean accesibles al eval()
     ecuacion = re.sub(r'sin\(', '(<1>>', ecuacion)
     ecuacion = re.sub(r'cos\(', '(<2>>', ecuacion)
@@ -223,7 +228,7 @@ def correc_ecuacion2 (ecuacion):
     # Reestaurar funciones trigonometricas
     ecuacion = re.sub(r'\(<1>>', 'np.sin(', ecuacion)
     ecuacion = re.sub(r'\(<2>>', 'np.cos(', ecuacion)
-    ecuacion = re.sub(r'\(<3>>', 'np.tan(', ecuacion)
+    ecuacion = re.sub(r'\(<3>>', 'math.tan(', ecuacion)
     ecuacion = re.sub(r'\(<4-4>>', 'np.arcsin(', ecuacion)
     ecuacion = re.sub(r'\(<5-5>>', 'np.arccos(', ecuacion)
     ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion) 

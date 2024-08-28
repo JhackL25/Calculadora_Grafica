@@ -10,6 +10,7 @@ def cal_graf_tkinter_vs ():
     import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+    
 
     # Globalizacion de variables para que las utilizen las funciones
     global Slot1, Slot2, Slot3, Slot4, Slot4, Slot5, Slot6, Memory_frame, Slot1_str, Slot2_str, Slot3_str, Slot4_str, Slot5_str, Slot6_str, Entrada_funciones, raiz, Variable_de_control
@@ -42,19 +43,33 @@ def cal_graf_tkinter_vs ():
         # En este caso limitamos al usuario para que solo pueda graficar 6 funciones
         # de manera simultanea
         if len (Funciones_actuales) >= 6:
-            return print("Error: No puedes graficar más de 6 funciones.")
-        
+            return print("No puedes graficar más de 6 funciones.")
+            
         try:
             π = np.pi
-            e = np.e           
-            # Aqui se define el dominio (x) y los valores que la funcion toma en (y)
-            x_vals = np.linspace (-500, 500, 10000)
-            y_vals = [eval (funcion) for x in x_vals]
+            e = np.e   
 
-            # Si ya hay menos de 6 funciones graficadas, añadir la nueva
-            grafico, = ax.plot (x_vals, y_vals, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
-            Graficas.append (grafico)
-            Funciones_actuales.append (funcion)
+            if 'np.tan('  in funcion:
+                x_vals_tan = np.linspace(-50, 50, 100000)
+                y_vals_tan = np.array([eval (funcion) for x in x_vals_tan])
+    
+                y_vals_tan[np.abs(y_vals_tan) > 50] = np.nan 
+                
+                # Si ya hay menos de 6 funciones graficadas, añadir la nueva
+                grafico, = ax.plot (x_vals_tan, y_vals_tan, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
+                Graficas.append (grafico)
+                Funciones_actuales.append (funcion)
+                print('tangente')
+            else:
+                # Aqui se define el dominio (x) y los valores que la funcion toma en (y)
+                x_vals = np.linspace (-500, 500, 10000)
+                y_vals = [eval (funcion) for x in x_vals]
+
+                # Si ya hay menos de 6 funciones graficadas, añadir la nueva
+                grafico, = ax.plot (x_vals, y_vals, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
+                Graficas.append (grafico)
+                Funciones_actuales.append (funcion)
+                print('sin tangente')
 
             # Actualizacion de los botones
             Recorrer_funciones ()
@@ -332,7 +347,13 @@ def cal_graf_tkinter_vs ():
             # Actualizar el gráfico
             ax.relim ()
             ax.autoscale_view ()
-            ax.legend ()
+            
+            if len (Funciones_actuales) == 0: # En caso de que ya no existan funciones 
+#                                             # actuales la leyenda no va a arrojar error
+                ax.legend ([""])
+            else:
+                ax.legend ()
+
             Frame_grafico.draw ()
             
             # Actualizar los botones
