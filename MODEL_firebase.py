@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import db
 
 # Recibe la credencial del usuario
-cred = credentials.Certificate("D:/CALCULADORA_GRAFICA [1.5v]/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
+cred = credentials.Certificate("C:/Users/joelg/OneDrive/Documents/GitHub/SAVE/Calculadora_Grafica/geogebra-969a5-firebase-adminsdk-2ptyc-5504f6091c.json")
 
 # Inicializa la base de datos con los permisos dado por la credencial
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://geogebra-969a5-default-rtdb.firebaseio.com/'})

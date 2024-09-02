@@ -12,6 +12,8 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'sec\(', '(<5-5>>', ecuacion)
     ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
     ecuacion = re.sub(r'e','<7>',ecuacion)  
+    ecuacion = re.sub(r'log\(', '<8>', ecuacion)
+    ecuacion = re.sub(r'ln\(', '<9>', ecuacion)
 
     # En el caso de gente chistosa
     ecuacion = re.sub(r'\ñ', r'x', ecuacion)
@@ -48,6 +50,8 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'\(<5-5>>', 'np.arccos(', ecuacion)
     ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion) 
     ecuacion = re.sub(r'<7>', 'e', ecuacion)  
+    ecuacion = re.sub(r'<8>', 'np.log(', ecuacion)
+    ecuacion = re.sub(r'<9>', 'np.log10(', ecuacion)
     
     return ecuacion
 

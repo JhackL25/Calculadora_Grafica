@@ -217,6 +217,16 @@ def cal_graf_tkinter_vs ():
                 Contenido_nuevo = (funcion + "ctn()")
                 Entrada_funciones.delete (0, tk.END)
                 Entrada_funciones.insert (0, Contenido_nuevo)
+
+            if numero_de_funcion == "Logaritmo":
+                Contenido_nuevo = (funcion + "log()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
+            
+            if numero_de_funcion == "LogNatural":
+                Contenido_nuevo = (funcion + "ln()")
+                Entrada_funciones.delete (0, tk.END)
+                Entrada_funciones.insert (0, Contenido_nuevo)
         except:
             pass
     
