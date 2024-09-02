@@ -11,8 +11,12 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'csc\(', '(<4-4>>', ecuacion)
     ecuacion = re.sub(r'sec\(', '(<5-5>>', ecuacion)
     ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
-    ecuacion = re.sub(r'e','<7>',ecuacion)
+    ecuacion = re.sub(r'e','<7>',ecuacion)  
 
+    # En el caso de gente chistosa
+    ecuacion = re.sub(r'\ñ', r'x', ecuacion)
+    ecuacion = re.sub(r'\Ñ', r'x', ecuacion)
+    
     # Cada letra va a ser procesada con los datos de x
     ecuacion = re.sub(r'[a-zA-Z]', r'x', ecuacion)
 
@@ -31,7 +35,6 @@ def correc_ecuacion (ecuacion):
     ecuacion = re.sub(r'(<7>)(π)', r'\1*\2', ecuacion)
     ecuacion = re.sub(r'(π)(<7>)', r'\1*\2', ecuacion)
     
-
     
     ecuacion = re.sub(r'(\d)(<7>)', r'\1*\2', ecuacion)              
     ecuacion = re.sub(r'(<7>)(\()', r'\1*\2', ecuacion)              
@@ -208,7 +211,6 @@ def correc_ecuacion2 (ecuacion): # Para hacer el 3D
     ecuacion = re.sub(r'ctn\(', '(<6-6>>', ecuacion)
     ecuacion = re.sub(r'e','<7>',ecuacion)
 
-
     # cambios necesarios para operar eval()
     ecuacion = re.sub(r'([a-zA-Z])(\()', r'\1*\2', ecuacion)    # Variable y paréntesis abierto
     ecuacion = re.sub(r'(\))([a-zA-Z0-9])', r'\1*\2', ecuacion)  # Paréntesis cerrado y variable o número
@@ -220,15 +222,14 @@ def correc_ecuacion2 (ecuacion): # Para hacer el 3D
     ecuacion = re.sub(r'(\d)(π)', r'\1*\2', ecuacion)              #Numero y Pi
     ecuacion = re.sub(r'(π)(\()', r'\1*\2', ecuacion)              #Pi y parentesis
     ecuacion = re.sub(r'(π)([a-zA-Z])', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'([a-zA-Z])(π)', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'(<7>)(π)', r'\1*\2', ecuacion)
+    ecuacion = re.sub(r'(π)(<7>)', r'\1*\2', ecuacion)
     
-    ecuacion = re.sub(r'(\d)(<7>)', r'\1*\2', ecuacion)              
-    ecuacion = re.sub(r'(<7>)(\()', r'\1*\2', ecuacion)              
-    ecuacion = re.sub(r'(<7>)([a-zA-Z])', r'\1*\2', ecuacion)
-
     # Reestaurar funciones trigonometricas
     ecuacion = re.sub(r'\(<1>>', 'np.sin(', ecuacion)
     ecuacion = re.sub(r'\(<2>>', 'np.cos(', ecuacion)
-    ecuacion = re.sub(r'\(<3>>', 'math.tan(', ecuacion)
+    ecuacion = re.sub(r'\(<3>>', 'np.tan(', ecuacion)
     ecuacion = re.sub(r'\(<4-4>>', 'np.arcsin(', ecuacion)
     ecuacion = re.sub(r'\(<5-5>>', 'np.arccos(', ecuacion)
     ecuacion = re.sub(r'\(<6-6>>', 'np.arctan(', ecuacion) 

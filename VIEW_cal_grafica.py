@@ -44,22 +44,59 @@ def cal_graf_tkinter_vs ():
         # de manera simultanea
         if len (Funciones_actuales) >= 6:
             return print("No puedes graficar más de 6 funciones.")
-            
-        try:
-            π = np.pi
-            e = np.e   
+        
+        # En caso de que la entrada se encuentre vacia no ocurra nada
+        if funcion == "":
+            return None 
+        
+        # En el caso de que arcoseno o secante produzca una excpcion la va a ignorar
+        import warnings # Aqui se importa el modulo para gestionar las advertencias del tipo "warning"
+        warnings.filterwarnings ("ignore", category= RuntimeWarning)
 
-            if 'np.tan('  in funcion:
-                x_vals_tan = np.linspace(-50, 50, 100000)
-                y_vals_tan = np.array([eval (funcion) for x in x_vals_tan])
-    
-                y_vals_tan[np.abs(y_vals_tan) > 50] = np.nan 
-                
-                # Si ya hay menos de 6 funciones graficadas, añadir la nueva
-                grafico, = ax.plot (x_vals_tan, y_vals_tan, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
-                Graficas.append (grafico)
-                Funciones_actuales.append (funcion)
-                print('tangente')
+        try:
+            # Definicion de pi y euler
+            π = np.pi
+            e = np.e  
+
+            if 'np.tan(' in funcion:
+                if 'np.tan' and '/1' in funcion:
+                    print('tan /')
+                    
+                    x_vals_tan = np.linspace(-30, 30, 100000)
+                    y_vals_tan = np.array([eval (funcion) for x in x_vals_tan])
+
+        
+                    y_vals_tan[np.abs(y_vals_tan) > 30] = np.nan 
+                   
+                    
+                    # Si ya hay menos de 6 funciones graficadas, añadir la nueva
+                    grafico, = ax.plot (x_vals_tan, y_vals_tan, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
+                    Graficas.append (grafico)
+                    Funciones_actuales.append (funcion)
+                    
+
+                else:
+                    x_vals_tan = np.linspace(-50, 50, 100000)
+                    y_vals_tan = np.array([eval (funcion) for x in x_vals_tan])
+        
+                    y_vals_tan[np.abs(y_vals_tan) > 100] = np.nan 
+                    
+                    # Si ya hay menos de 6 funciones graficadas, añadir la nueva
+                    grafico, = ax.plot (x_vals_tan, y_vals_tan, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
+                    Graficas.append (grafico)
+                    Funciones_actuales.append (funcion)
+                    print('tan')
+            elif '**-1' in funcion:
+                    x_vals_tan = np.linspace(-50, 50, 100000)
+                    y_vals_tan = np.array([eval (funcion) for x in x_vals_tan])
+        
+                    y_vals_tan[np.abs(y_vals_tan) > 100] = np.nan 
+                    
+                    # Si ya hay menos de 6 funciones graficadas, añadir la nueva
+                    grafico, = ax.plot (x_vals_tan, y_vals_tan, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
+                    Graficas.append (grafico)
+                    Funciones_actuales.append (funcion)
+                    print('**-1')
             else:
                 # Aqui se define el dominio (x) y los valores que la funcion toma en (y)
                 x_vals = np.linspace (-500, 500, 10000)
@@ -69,7 +106,9 @@ def cal_graf_tkinter_vs ():
                 grafico, = ax.plot (x_vals, y_vals, label=f'f {len (Funciones_actuales) + 1}(x) = {mod.correc_historial(funcion)}')
                 Graficas.append (grafico)
                 Funciones_actuales.append (funcion)
-                print('sin tangente')
+                print('normal')
+
+            
 
             # Actualizacion de los botones
             Recorrer_funciones ()
@@ -82,6 +121,12 @@ def cal_graf_tkinter_vs ():
             
             # Guardar la función en el historial
             mod.historial (funcion)
+        
+        except TypeError:
+            # En caso de que alguna funcion quede vacia no va a
+            # generar una excepción 
+            pass
+
         except Exception as e:
             print (f"Error: {e}")
 
@@ -207,27 +252,30 @@ def cal_graf_tkinter_vs ():
             funcion_str = correc_ecuacion2 (funcion_str)
             return funcion_str
 
-        funcion_str = obtener_funcion()
-        if funcion_str:  # Si el usuario ingresó una función
-            Ventana_3d = tk.Toplevel (raiz)
-            Ventana_3d.title (f"Gráfica 3D de | {funcion_str} |")
+        try:
+            funcion_str = obtener_funcion()
+            if funcion_str:  # Si el usuario ingresó una función
+                Ventana_3d = tk.Toplevel (raiz)
+                Ventana_3d.title (f"Gráfica 3D de | {funcion_str} |")
 
-            Grafico = Graficos_3D (funcion_str)
-            Frame_3d = FigureCanvasTkAgg (Grafico, master= Ventana_3d)
-            Frame_3d.get_tk_widget ().pack (fill= "both", expand= True)
+                Grafico = Graficos_3D (funcion_str)
+                Frame_3d = FigureCanvasTkAgg (Grafico, master= Ventana_3d)
+                Frame_3d.get_tk_widget ().pack (fill= "both", expand= True)
 
-            Herramientas = NavigationToolbar2Tk (Frame_3d, Ventana_3d, pack_toolbar= True)
-            Herramientas.update ()
-            
-            global Eliminar_grafico_3D
-            def Eliminar_grafico_3D ():
-                try:
-                    plt.close ()
-                    Ventana_3d.destroy ()
-                except NameError:
-                    pass
+                Herramientas = NavigationToolbar2Tk (Frame_3d, Ventana_3d, pack_toolbar= True)
+                Herramientas.update ()
+                
+                global Eliminar_grafico_3D
+                def Eliminar_grafico_3D ():
+                    try:
+                        plt.close ()
+                        Ventana_3d.destroy ()
+                    except NameError:
+                        pass
 
-        Ventana_3d.protocol ("WM_DELETE_WINDOW", Eliminar_grafico_3D)
+                Ventana_3d.protocol ("WM_DELETE_WINDOW", Eliminar_grafico_3D)
+        except TypeError:
+            pass # En caso de que el usuario no ingresó una función
 
     # Funcion para deshabilitar la cuadriculas
     def Deshabilitar_cuadriculas ():
@@ -265,8 +313,8 @@ def cal_graf_tkinter_vs ():
     teclado_frame = tk.Frame (raiz)
     teclado_frame.grid (column= 1, row= 1)
 
-    trigonometria = ("Potencia: ^", "Sin", "Cos", "Tan", "π/e", "CSC", "SEC", "CTAN")
-    Funciones = ("Exponenciación", "Seno", "Coseno", "Tangente", "Pi", "Cosecante", "Secante", "Cotangente")
+    trigonometria = ("Potencia: ^", "Sin", "Cos", "Tan", "Log", "π/e", "CSC", "SEC", "CTAN", "LogN")
+    Funciones = ("Exponenciación", "Seno", "Coseno", "Tangente", "Logaritmo", "Pi", "Cosecante", "Secante", "Cotangente", "LogNatural")
     
     # Número de fila, columna y funcion para los botones del ciclo for
     fila = 0
@@ -280,7 +328,7 @@ def cal_graf_tkinter_vs ():
         Columna += 1
         funcion += 1
         
-        if cada_funcion == "Tan":
+        if cada_funcion == "Log":
             Columna = 0
             fila = 1
     

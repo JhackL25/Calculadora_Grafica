@@ -530,18 +530,28 @@ def del_users ():
     del_enviar = Button (delU_raiz, text= "Eliminar usuario", command= del_verificate)
     del_enviar.grid (row= 4, column= 0, columnspan= 2)
 
+    # Variable para controlar cual ventana restaurar
+    global win_reference # La variable debe ser global para que la funcion la utilice
+    win_reference = True
+    
     def Abort_delete ():
-        try:
-            from VIEW_Calculadora_basica import raiz
-            delU_raiz.destroy ()
-            raiz.deiconify ()
-        except:
-            pass
+        # Para poder modificar la variable win_reference
+        global win_reference 
         
-        try:
-            from VIEW_cal_grafica import raiz as graf
-            delU_raiz.destroy ()
-            graf.deiconify ()
-        except:
-            pass
+        if win_reference == True:
+            try:
+                from VIEW_cal_grafica import raiz as graf
+                delU_raiz.destroy ()
+                graf.deiconify ()
+            except:
+                win_reference = False
+        
+        if win_reference == False:    
+            try:
+                from VIEW_Calculadora_basica import raiz
+                delU_raiz.destroy ()
+                raiz.deiconify ()
+            except:
+                pass
+
     delU_raiz.protocol ("WM_DELETE_WINDOW", Abort_delete)
